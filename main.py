@@ -1,60 +1,30 @@
 import pygame
-from src.entities import PhysicsEntities
-from math import sqrt
+from src import level, settings
+from src.player import Sprite
+from src.scene import Renderer
 
 class Game:
-    def __init__(self, window_size):
+    def __init__(self) -> None:
         pygame.init()
-        self.clock = pygame.time.Clock()
-        self.running = False
-        self.window_size = window_size
 
-        self.screen = pygame.display.set_mode(window_size)
-        self.display = pygame.Surface((window_size[0]/2, window_size[1]/2))
+        self.display = pygame.display.set_mode(settings.screen_res)
+        self.clock = pygame.time.Clock()
         
-        self.colors = {"white":(255, 255, 255),
-                       "black":(0, 0, 0),
-                       "red":(255, 0, 0),
-                       "green":(0, 255, 0),
-                       "blue":(0, 0, 255),
-                       "cyan":(0, 255, 255)}
-        
-        self.assets = {"player":"assets/basky_32x32.png"}
-        self.player = PhysicsEntities(self, (30, 30), "player", (0,0))
+        self.level_manager = level.LevelManager("saves/test.save")
+        self.player = Sprite(self.level_manager.load_tilemap(0))
+        self.renderer = Renderer(settings.screen_res)
 
     def run(self):
-        self.running = True
-        pos = []
-        while self.running:
-            movement = (0, 0)
-            self.display.fill(self.colors["black"])
-            dt = self.clock.tick(60) * 0.001
-            self.fps = self.clock.get_fps() 
-
-            # print(f"fps: {self.fps}")
-
+        running = True
+        while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.running = False
+                    running = False
 
-                if (event.type == pygame.KEYDOWN and len(pos) == 0) or (event.type == pygame.KEYUP and len(pos)):
-                    pos.append(pygame.mouse.get_pos())
-
-
-            if len(pos) > 1:
-                point1, point2 = pos[0], pos[1]
-                dir = ((point2[0] - point1[0]), (point2[1] - point1[1]))
-                magnitude = sqrt((point1[0]-point2[0])**2 + (point1[1] - point2[1])**2)
-
-                self.player.vel = list(dir)
-                pos = []
-
-            self.player.update(dt, movement)
-            self.player.render(self.display)
-
+            self.renderer.render(self.display, self.player, self.player.tilemap)
             pygame.display.update()
-            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0,0))
+            self.clock.tick(settings.fps)
 
-
-if __name__ == "__main__":
-    Game((600, 500)).run()
+Game().run()
+pygame.quit()
+quit()
