@@ -21,6 +21,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
 
+                self.player.handle_input(event)
+
+            self.player.update(1/settings.fps)
             self.renderer.render(self.display, self.player, self.player.tilemap)
             pygame.display.update()
             self.clock.tick(settings.fps)
