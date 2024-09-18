@@ -27,7 +27,7 @@ class LevelManager:
         sep_tilemap = {}
         for y, x_pos in enumerate(clean_tilemap):
             for x, tile_type in enumerate(x_pos):
-                if clean_tilemap[y][x] != "0":
+                if clean_tilemap[y][x] != "0" and clean_tilemap[y][x] != "-1":
                     print(f"y:{y}, x:{x}, {tile_type}")
                     sep_tilemap[f"{x};{y}"] = {"type": tile_type,
                                                "rect": pygame.Rect(

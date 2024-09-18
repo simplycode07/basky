@@ -1,5 +1,5 @@
 import pygame
-from . import settings
+from . import settings, colors
 
 class Sprite:
     def __init__(self, tilemap) -> None:
@@ -26,11 +26,37 @@ class Sprite:
             if event.key == pygame.K_d or event.key == pygame.K_a:
                 self.vel.x = 0
 
-    def update(self, delta:float):
+    def update(self, delta:float, surface):
         self.pos += self.vel * delta
         position_tilemap = (int(self.pos.x // settings.tilesize), int(self.pos.y // settings.tilesize) + 1)
-
         
+        rects_around = self.get_rects_around(position_tilemap)
+
+        self_rect = self.get_self_rect()
+        for rect in rects_around:
+            if self_rect.colliderect(rect):
+                pygame.draw.rect(surface, colors["red"], rect)
+                print(f"{rect.topleft}")
+                if self.vel.y > 0:
+                    self.vel.y *= -settings.elasticity
+                    self_rect.bottom = rect.top
+
+                elif self.vel.y < 0:
+                    self.vel.y *= -settings.elasticity
+                    self_rect.top = rect.bottom
+
+                elif self.vel.x > 0:
+                    self.vel.x *= -settings.elasticity
+                    self_rect.right = rect.left
+
+                elif self.vel.x  < 0:
+                    self.vel.x *= -settings.elasticity
+                    self_rect.left = rect.right
+
+                self.pos = self_rect.topleft
+
+                return
+
         # if position_tilemap[1] > 0:
         #     if self.tilemap[position_tilemap[1]][position_tilemap[0]] == "1" and position_tilemap[1] * settings.tilesize >= self.pos.y:
         #         self.pos.y = (position_tilemap[1] - 1) * settings.tilesize
@@ -38,6 +64,9 @@ class Sprite:
         #         return
 
         self.vel.y += settings.gravity * delta
+
+    def get_self_rect(self) -> pygame.Rect:
+        return pygame.Rect(self.pos[0], self.pos[1], settings.tilesize, settings.tilesize)
 
     def get_init_pos(self) -> pygame.Vector2:
         for i in range(settings.num_tiles_x):
@@ -55,6 +84,12 @@ class Sprite:
 
         position_around = [(-1,1), (-1,0), (-1,-1), (0,1), (0,-1), (1,1), (1,0), (1,-1)]
 
+        for pos in position_around:
+            x = position_tilemap[0] + pos[0]
+            y = position_tilemap[1] + pos[1]
+            if rect := self.tilemap.get(f"{x};{y}", {}).get("rect"):
+                rects_around.append(rect)
 
+        return rects_around
 
 
