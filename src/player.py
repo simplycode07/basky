@@ -29,14 +29,14 @@ class Sprite:
 
     def update(self, delta: float, surface):
         self.pos += self.vel * delta
-        position_tilemap = (int(self.pos.x // settings.tilesize),
-                            int(self.pos.y // settings.tilesize) + 1)
+        position_tilemap = (int((self.pos.x + settings.tilesize//2) // settings.tilesize),
+                            int((self.pos.y + settings.tilesize//2) // settings.tilesize) + 1)
 
         rects_around, collision_plane = self.get_rects_around(position_tilemap)
 
         self_rect = self.get_self_rect()
-        pygame.draw.rect(surface, colors["red"], pygame.Rect(
-            position_tilemap[0] * settings.tilesize, position_tilemap[1] * settings.tilesize, settings.tilesize, settings.tilesize))
+        # pygame.draw.rect(surface, colors["red"], pygame.Rect(
+            # position_tilemap[0] * settings.tilesize, position_tilemap[1] * settings.tilesize, settings.tilesize, settings.tilesize))
         for rect in rects_around:
             if self_rect.colliderect(rect):
                 # if collision_plane == 0:
@@ -80,7 +80,7 @@ class Sprite:
                     self.vel.y += settings.gravity * delta
 
                 # this made the sprite oscillate
-                self.pos = self_rect.topleft
+                # self.pos = self_rect.topleft
                 # self.pos[0] = self_rect.center[0] - settings.tilesize//2
                 # self.pos[1] = self_rect.center[1] - settings.tilesize//2 + 1
 
