@@ -18,9 +18,9 @@ class Sprite:
                 print("jumping")
                 self.vel.y += -settings.jump_vel
             if event.key == pygame.K_d:
-                self.vel.x = 50 
+                self.vel.x = 300 
             if event.key == pygame.K_a:
-                self.vel.x = -50
+                self.vel.x = -300
         
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_d or event.key == pygame.K_a:
@@ -30,38 +30,42 @@ class Sprite:
         self.pos += self.vel * delta
         position_tilemap = (int(self.pos.x // settings.tilesize), int(self.pos.y // settings.tilesize) + 1)
         
-        rects_around = self.get_rects_around(position_tilemap)
+        rects_around, collision_plane = self.get_rects_around(position_tilemap)
 
         self_rect = self.get_self_rect()
         for rect in rects_around:
             if self_rect.colliderect(rect):
-                pygame.draw.rect(surface, colors["red"], rect)
+
+                # this will move the sprite to its previous position
+                self.pos -= self.vel * delta
+
+                # debug statement
+                # pygame.draw.rect(surface, colors["red"], rect)
                 print(f"{rect.topleft}")
+                # if the collion is in the vertical plane, i dont want to add the gravity in that instant
+                # hence the return statements
                 if self.vel.y > 0:
                     self.vel.y *= -settings.elasticity
-                    self_rect.bottom = rect.top
+                    # self.pos.y -= self.vel.y * delta
+                    return
 
                 elif self.vel.y < 0:
                     self.vel.y *= -settings.elasticity
-                    self_rect.top = rect.bottom
+                    # self.pos.y -= self.vel.y * delta
+                    return
 
                 elif self.vel.x > 0:
                     self.vel.x *= -settings.elasticity
-                    self_rect.right = rect.left
+                    # self.pos.x -= self.vel.y * delta
 
                 elif self.vel.x  < 0:
                     self.vel.x *= -settings.elasticity
-                    self_rect.left = rect.right
+                    # self.pos.x -= self.vel.x * delta
 
-                self.pos = self_rect.topleft
-
-                return
-
-        # if position_tilemap[1] > 0:
-        #     if self.tilemap[position_tilemap[1]][position_tilemap[0]] == "1" and position_tilemap[1] * settings.tilesize >= self.pos.y:
-        #         self.pos.y = (position_tilemap[1] - 1) * settings.tilesize
-        #         self.vel.y *= settings.elasticity * -1
-        #         return
+                # this made the sprite oscillate
+                # self.pos = self_rect.topleft
+                # self.pos[0] = self_rect.center[0] - settings.tilesize//2
+                # self.pos[1] = self_rect.center[1] - settings.tilesize//2 + 1
 
         self.vel.y += settings.gravity * delta
 
@@ -80,16 +84,40 @@ class Sprite:
 
     
     def get_rects_around(self, position_tilemap):
+        # collision_plane is 1 for collision in horizontal plane
+        # collision_plane is 2 for collision in vertical plane
+        # collision_plane is 0 for collision in both planes, i dunno if this is possible or not
         rects_around = []
 
-        position_around = [(-1,1), (-1,0), (-1,-1), (0,1), (0,-1), (1,1), (1,0), (1,-1)]
+        position_around_x = [(-1,0), (1,0)]
+        position_around_y = [(0,1), (0,-1)]
+        position_around_xy = [(-1,1), (-1,-1), (0, 0), (1,1), (1,-1)]
 
-        for pos in position_around:
+        collision_plane = 0
+        for pos in position_around_x:
             x = position_tilemap[0] + pos[0]
             y = position_tilemap[1] + pos[1]
             if rect := self.tilemap.get(f"{x};{y}", {}).get("rect"):
                 rects_around.append(rect)
+            
+            collision_plane = 1
 
-        return rects_around
+        for pos in position_around_y:
+            x = position_tilemap[0] + pos[0]
+            y = position_tilemap[1] + pos[1]
+            if rect := self.tilemap.get(f"{x};{y}", {}).get("rect"):
+                rects_around.append(rect)
+            
+            collision_plane = 1
+
+        for pos in position_around_xy:
+            x = position_tilemap[0] + pos[0]
+            y = position_tilemap[1] + pos[1]
+            if rect := self.tilemap.get(f"{x};{y}", {}).get("rect"):
+                rects_around.append(rect)
+            
+            collision_plane = 0
+
+        return rects_around, collision_plane
 
 
