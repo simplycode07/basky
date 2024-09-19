@@ -8,7 +8,6 @@ class Sprite:
 
         # self.pos = self.get_init_pos()
         self.pos = init_pos
-        print(self.pos)
         self.vel = pygame.Vector2(0, 0)
 
         self.img = pygame.image.load("assets/basky_32x32.png")
@@ -29,8 +28,8 @@ class Sprite:
 
     def update(self, delta: float, surface):
         self.pos += self.vel * delta
-        position_tilemap = (int((self.pos.x + settings.tilesize//2) // settings.tilesize),
-                            int((self.pos.y + settings.tilesize//2) // settings.tilesize) + 1)
+        position_tilemap = (int((self.pos.x) // settings.tilesize),
+                            int((self.pos.y) // settings.tilesize))
 
         rects_around, collision_plane = self.get_rects_around(position_tilemap)
 
@@ -39,45 +38,45 @@ class Sprite:
             # position_tilemap[0] * settings.tilesize, position_tilemap[1] * settings.tilesize, settings.tilesize, settings.tilesize))
         for rect in rects_around:
             if self_rect.colliderect(rect):
-                # if collision_plane == 0:
-                #     self.pos -= self.vel * delta
-                #     self.vel = -self.vel * settings.elasticity
-                #
-                # elif collision_plane == 1:
-                #     self.pos.x -= self.vel.x * delta
-                #     self.vel.x = -self.vel.x * settings.elasticity
-                #     self.vel.y += settings.gravity * delta
-                #
-                # elif collision_plane == 2:
-                #     self.pos.y -= self.vel.y * delta
-                #     self.vel.y = -self.vel.y * settings.elasticity
-                #
+                if collision_plane == 0:
+                    self.pos -= self.vel * delta
+                    self.vel = -self.vel * settings.elasticity
+
+                elif collision_plane == 1:
+                    self.pos.x -= self.vel.x * delta
+                    self.vel.x = -self.vel.x * settings.elasticity
+                    self.vel.y += settings.gravity * delta
+
+                elif collision_plane == 2:
+                    self.pos.y -= self.vel.y * delta
+                    self.vel.y = -self.vel.y * settings.elasticity
+
                 # return
                 # this will move the sprite to its previous position
-                self.pos -= self.vel * delta
+                # self.pos -= self.vel * delta
 
                 # debug statement
                 # pygame.draw.rect(surface, colors["red"], rect)
 
                 # if the collion is in the vertical plane, i dont want to add the gravity in that instant
                 # hence the return statements
-                if self.vel.y > 0:
-                    self.vel.y *= -settings.elasticity
-                    # self.pos.y -= self.vel.y * delta
-
-                elif self.vel.y < 0:
-                    self.vel.y *= -settings.elasticity
-                    # self.pos.y -= self.vel.y * delta
-
-                elif self.vel.x > 0:
-                    self.vel.x *= -settings.elasticity
-                    self.pos.x -= self.vel.x * delta
-                    self.vel.y += settings.gravity * delta
-
-                elif self.vel.x  < 0:
-                    self.vel.x *= -settings.elasticity
-                    self.pos.x -= self.vel.x * delta
-                    self.vel.y += settings.gravity * delta
+                # if self.vel.y > 0:
+                #     self.vel.y *= -settings.elasticity
+                #     # self.pos.y -= self.vel.y * delta
+                #
+                # elif self.vel.y < 0:
+                #     self.vel.y *= -settings.elasticity
+                #     # self.pos.y -= self.vel.y * delta
+                #
+                # elif self.vel.x > 0:
+                #     self.vel.x *= -settings.elasticity
+                #     self.pos.x -= self.vel.x * delta
+                #     self.vel.y += settings.gravity * delta
+                #
+                # elif self.vel.x  < 0:
+                #     self.vel.x *= -settings.elasticity
+                #     self.pos.x -= self.vel.x * delta
+                #     self.vel.y += settings.gravity * delta
 
                 # this made the sprite oscillate
                 # self.pos = self_rect.topleft
