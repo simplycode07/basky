@@ -25,6 +25,7 @@ class LevelManager:
             clean_tilemap.append(i.strip().split(","))
 
         sep_tilemap = {}
+        init_pos = (0, 0)
         for y, x_pos in enumerate(clean_tilemap):
             for x, tile_type in enumerate(x_pos):
                 if clean_tilemap[y][x] != "0" and clean_tilemap[y][x] != "-1":
@@ -34,5 +35,9 @@ class LevelManager:
                         x*settings.tilesize, y*settings.tilesize, settings.tilesize, settings.tilesize),
                                                "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
 
+                elif tile_type == "-1":
+                    print(x, y)
+                    init_pos = (x, y)
+
         # print(sep_tilemap)
-        return sep_tilemap
+        return sep_tilemap, init_pos

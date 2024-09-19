@@ -11,7 +11,7 @@ class Game:
         self.clock = pygame.time.Clock()
         
         self.level_manager = level.LevelManager("saves/test.save")
-        self.player = Sprite(self.level_manager.load_tilemap(0))
+        self.player = Sprite(*self.level_manager.load_tilemap(0))
         self.renderer = Renderer(settings.screen_res)
 
     def run(self):
