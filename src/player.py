@@ -12,6 +12,8 @@ class Sprite:
 
         self.img = pygame.image.load("assets/basky_32x32.png")
         self.angle = 0
+        
+        self.input_positions = []
 
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -26,6 +28,20 @@ class Sprite:
             if event.key == pygame.K_d or event.key == pygame.K_a:
                 self.vel.x = 0
 
+        mouse_state = pygame.mouse.get_pressed()
+        mouse_pos = list(pygame.mouse.get_pos())
+
+        if len(self.input_positions) == 0 and mouse_state[0]:
+            self.input_positions.append(mouse_pos)
+
+        if len(self.input_positions) == 1 and not mouse_state[0]:
+            self.input_positions.append(mouse_pos)
+            
+            self.add_impulse(3)
+            self.input_positions = []
+            print(self.input_positions)
+
+
     def update(self, delta: float, surface):
         self.pos += self.vel * delta
         position_tilemap = (int((self.pos.x + settings.tilesize//2) // settings.tilesize),
@@ -34,13 +50,17 @@ class Sprite:
         self_rect = self.get_self_rect()
         collided, kernel = self.get_collision_kernel(position_tilemap, self_rect)
 
-        # pygame.draw.rect(surface, colors["red"], pygame.Rect(
-        #     position_tilemap[0] * settings.tilesize, position_tilemap[1] * settings.tilesize, settings.tilesize, settings.tilesize))
+        pygame.draw.rect(surface, colors["red"], pygame.Rect(
+            position_tilemap[0] * settings.tilesize, position_tilemap[1] * settings.tilesize, settings.tilesize, settings.tilesize))
 
+        # this is still buggy
+        # try solving the "step bro im stuck problem" by storing the old kernel
+        # and using it to check change in collision
+        # ig it should work otherwise fuck me
         if collided:
             # [0, 1, 0]
             # [0, 0, 0]
-            # [0, 1, 0]
+            # [1, 1, 0]
             # a kernel like this means collision in the vertical plane
             if kernel[1][0] or kernel[1][2]:
                 self.pos.x -= self.vel.x * delta
@@ -63,10 +83,6 @@ class Sprite:
                 
         self.vel.y += settings.gravity * delta
        
-
-    def get_self_rect(self) -> pygame.Rect:
-        return pygame.Rect(self.pos[0], self.pos[1], settings.tilesize, settings.tilesize)
-
     # checks for collisions and returns kernel for collision
     def get_collision_kernel(self, position_tilemap, self_rect:pygame.Rect):
         rects_around = []
@@ -97,3 +113,16 @@ class Sprite:
 
         # return rects_around, collision_plane
         return collided, kernel
+
+    def get_self_rect(self) -> pygame.Rect:
+        return pygame.Rect(self.pos[0], self.pos[1], settings.tilesize, settings.tilesize)
+    
+    def add_impulse(self, multiplier:int):
+        point1 = self.input_positions[0]
+        point2 = self.input_positions[1]
+
+        magnitude_x = (point1[0] - point2[0]) * multiplier
+        magnitude_y = (point1[1] - point2[1]) * multiplier
+
+        self.vel.x = magnitude_x
+        self.vel.y = magnitude_y
