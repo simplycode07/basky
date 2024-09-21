@@ -7,7 +7,7 @@ class Sprite:
         self.tilemap = tilemap
 
         # self.pos = self.get_init_pos()
-        self.pos = init_pos
+        self.pos = pygame.Vector2(init_pos[0], init_pos[1])
         self.vel = pygame.Vector2(0, 0)
 
         self.img = pygame.image.load("assets/basky_32x32.png")
@@ -62,94 +62,13 @@ class Sprite:
             # return
                 
         self.vel.y += settings.gravity * delta
-            # for rect in rects_around:
-        #     if self_rect.colliderect(rect):
-        #         pygame.draw.rect(surface, colors["yellow"], rect)
-        #         # if collision_plane == 0:
-        #         #     self.pos -= self.vel * delta
-        #         #     self.vel = -self.vel * settings.elasticity
-        #         #
-        #         # elif collision_plane == 1:
-        #         #     self.pos.x -= self.vel.x * delta
-        #         #     self.vel.x = -self.vel.x * settings.elasticity
-        #         #     self.vel.y += settings.gravity * delta
-        #         #
-        #         #     if self.vel.x > 0:
-        #         #         self.pos.x = rect.left - settings.tilesize
-        #         #
-        #         #
-        #         # elif collision_plane == 2:
-        #         #     self.pos.y -= self.vel.y * delta
-        #         #     self.vel.y = -self.vel.y * settings.elasticity
-        #
-        #         # return
-        #         # this will move the sprite to its previous position
-        #         self.pos -= self.vel * delta
-        #
-        #         # debug statement
-        #         pygame.draw.rect(surface, colors["red"], rect)
-        #
-        #         # if the collion is in the vertical plane, i dont want to add the gravity in that instant
-        #         # hence the return statements
-        #         if self.vel.y > 0:
-        #             self.vel.y *= -settings.elasticity
-        #             # self.pos.y -= self.vel.y * delta
-        #
-        #         elif self.vel.y < 0:
-        #             self.vel.y *= -settings.elasticity
-        #             # self.pos.y -= self.vel.y * delta
-        #
-        #         elif self.vel.x > 0:
-        #             self.vel.x *= -settings.elasticity
-        #             self.pos.x -= self.vel.x * delta
-        #             self.vel.y += settings.gravity * delta
-        #
-        #         elif self.vel.x  < 0:
-        #             self.vel.x *= -settings.elasticity
-        #             self.pos.x -= self.vel.x * delta
-        #             self.vel.y += settings.gravity * delta
-        #
-        #         # this made the sprite oscillate
-        #         self.pos = self_rect.topleft
-        #         # self.pos[0] = self_rect.center[0] - settings.tilesize//2
-        #         # self.pos[1] = self_rect.center[1] - settings.tilesize//2 + 1
-        #
-        #         return
-
+       
 
     def get_self_rect(self) -> pygame.Rect:
         return pygame.Rect(self.pos[0], self.pos[1], settings.tilesize, settings.tilesize)
 
-    def get_init_pos(self) -> pygame.Vector2:
-        for i in range(settings.num_tiles_x):
-            for j in range(settings.num_tiles_y):
-                if self.tilemap.get(f"{i};{j}", {}).get("type") == "-1":
-                    return pygame.Vector2(i*settings.tilesize, j*settings.tilesize)
-
-        return pygame.Vector2(0, 0)
-
-    # get collision plane based on distance
-    # probably the best soln
-    # def get_collision_plane(self, rect):
-    #     x_distance = self.pos[0] - rect.x
-    #     y_distance = self.pos[1] - rect.y
-    #
-    #     print(f"xdist: {x_distance} ydist: {y_distance}")
-    #
-    #     if abs(x_distance) >= settings.tilesize:
-    #         return 1
-    #
-    #     if abs(y_distance) >= settings.tilesize:
-    #         return 2
-    #
-    #     return 0
-        
-    # remove the collision plane shit
-    # get collision plane based on collision not tiles around
+    # checks for collisions and returns kernel for collision
     def get_collision_kernel(self, position_tilemap, self_rect:pygame.Rect):
-        # collision_plane is 1 for collision in horizontal plane
-        # collision_plane is 2 for collision in vertical plane
-        # collision_plane is 0 for collision in both planes, i dunno if this is possible or not
         rects_around = []
 
         kernel = [[0, 0, 0],
