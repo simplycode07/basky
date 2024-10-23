@@ -1,7 +1,6 @@
 import pygame
 from . import settings, colors
 
-
 class Sprite:
     def __init__(self, tilemap, init_pos) -> None:
         self.tilemap = tilemap
@@ -14,6 +13,8 @@ class Sprite:
         self.angle = 0
 
         self.input_positions = []
+        
+        self.state = "normal"
 
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -32,9 +33,11 @@ class Sprite:
         mouse_pos = list(pygame.mouse.get_pos())
 
         if len(self.input_positions) == 0 and mouse_state[0]:
+            settings.physics_fps /= settings.input_slow_motion
             self.input_positions.append(mouse_pos)
 
         if len(self.input_positions) == 1 and not mouse_state[0]:
+            settings.physics_fps = settings.update_fps
             self.input_positions.append(mouse_pos)
 
             self.add_impulse(3)

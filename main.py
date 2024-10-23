@@ -24,9 +24,9 @@ class Game:
                 self.player.handle_input(event)
 
             self.renderer.render(self.display, self.player, self.player.tilemap)
-            self.player.update(1/settings.fps, self.display)
+            self.player.update(1/settings.physics_fps, self.display)
             pygame.display.update()
-            self.clock.tick(settings.fps)
+            self.clock.tick(settings.update_fps)
 
 Game().run()
 pygame.quit()

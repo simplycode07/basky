@@ -1,4 +1,7 @@
-fps = 120
+physics_fps = 120
+update_fps = 120
+
+input_slow_motion = 0.2
 
 screen_width = 1216
 screen_height = 800
