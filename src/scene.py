@@ -11,6 +11,7 @@ class Renderer:
                 tile = tilemap.get(f"{x};{y}")
                 if tile and tile["type"] == "1":
                     pygame.draw.rect(self.surface, colors["green"], tile["rect"])
+                    pygame.draw.rect(self.surface, colors["black"], tile["rect"], width=1)
 
 
         self.surface.blit(player.img, player.pos)

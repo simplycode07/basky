@@ -1,4 +1,4 @@
-fps = 60
+fps = 120
 
 screen_width = 1216
 screen_height = 800
