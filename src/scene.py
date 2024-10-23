@@ -1,4 +1,6 @@
 import pygame
+
+from src.player import State
 from . import settings, colors
 
 class Renderer:
@@ -13,6 +15,10 @@ class Renderer:
                     pygame.draw.rect(self.surface, colors["green"], tile["rect"])
                     pygame.draw.rect(self.surface, colors["black"], tile["rect"], width=1)
 
+        if player.state == State.INPUT:
+            trajectory_points = player.get_path_points(15)
+            if trajectory_points:
+                pygame.draw.lines(self.surface, colors["white"], False, trajectory_points, width=2)
 
         self.surface.blit(player.img, player.pos)
         display.blit(self.surface, (0, 0))

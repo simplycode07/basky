@@ -1,5 +1,6 @@
 import pygame
 from . import settings, colors
+from enum import Enum
 
 class Sprite:
     def __init__(self, tilemap, init_pos) -> None:
@@ -14,7 +15,7 @@ class Sprite:
 
         self.input_positions = []
         
-        self.state = "normal"
+        self.state = State.NORMAL
 
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -34,10 +35,14 @@ class Sprite:
 
         if len(self.input_positions) == 0 and mouse_state[0]:
             settings.physics_fps /= settings.input_slow_motion
+            self.state = State.INPUT
+
             self.input_positions.append(mouse_pos)
 
         if len(self.input_positions) == 1 and not mouse_state[0]:
             settings.physics_fps = settings.update_fps
+            self.state = State.NORMAL
+
             self.input_positions.append(mouse_pos)
 
             self.add_impulse(3)
@@ -60,11 +65,11 @@ class Sprite:
         # if collided and normal and collision_point:
         if collision_data.collision_status:
             self.pos -= self.vel * delta
-            print(f"before collision {self.vel.as_polar()}")
+            # print(f"before collision {self.vel.as_polar()}")
             self.vel.reflect_ip(collision_data.normal)
             self.vel.y = self.vel.y * settings.elasticity
             # self.vel.rotate_ip(90)
-            print(f"after collision {self.vel.as_polar()}")
+            # print(f"after collision {self.vel.as_polar()}")
             # center_to_pos_vec = self.pos - pygame.Vector2(self_rect.center)
             # self.pos = normal + collision_point + center_to_pos_vec
 
@@ -123,16 +128,49 @@ class Sprite:
     def get_self_rect(self) -> pygame.Rect:
         return pygame.Rect(self.pos[0], self.pos[1], settings.tilesize, settings.tilesize)
 
-    def add_impulse(self, multiplier: int) -> None:
+    def add_impulse(self, multiplier: int, vel:pygame.Vector2|None = None, mos_pos:tuple[int, int]|None = None) -> pygame.Vector2 | None:
         point1 = self.input_positions[0]
-        point2 = self.input_positions[1]
+        point2 = self.input_positions[1] if not mos_pos else mos_pos
 
         magnitude_x = (point1[0] - point2[0]) * multiplier
         magnitude_y = (point1[1] - point2[1]) * multiplier
 
-        self.vel.x = magnitude_x
-        self.vel.y = magnitude_y
+        if not vel:
+            self.vel.x = magnitude_x
+            self.vel.y = magnitude_y
 
+        else:
+            vel.x = magnitude_x
+            vel.y = magnitude_y
+            return vel
+
+    # this function predicts where the player will move according
+    # to projectile motion while ignoring collisions
+    def get_path_points(self, limit:int) -> list[tuple[int, int]] | None:
+        # this delta is basically the resolution of the path
+        # a lower value delta will result in a smoother path
+        # but of smaller length because the number of steps are same
+        delta = 1/15
+        mouse_pos = pygame.mouse.get_pos()
+        trajectory_points = []
+
+        vel = self.add_impulse(3, self.vel.copy(), mouse_pos)
+        x, y = self.pos + pygame.Vector2(self.radius, self.radius)
+
+        if not vel:
+            return
+
+        for _ in range(limit):
+            trajectory_points.append((int(x), int(y)))
+            x += vel.x * delta
+            y += vel.y * delta
+            vel.y += settings.gravity * delta
+
+        return trajectory_points
+
+class State(Enum):
+    NORMAL = 0
+    INPUT = 1
 
 class CollisionData:
     def __init__(self, collision_detected, normal, collision_point) -> None:

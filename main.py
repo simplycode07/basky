@@ -23,8 +23,8 @@ class Game:
 
                 self.player.handle_input(event)
 
-            self.renderer.render(self.display, self.player, self.player.tilemap)
             self.player.update(1/settings.physics_fps, self.display)
+            self.renderer.render(self.display, self.player, self.player.tilemap)
             pygame.display.update()
             self.clock.tick(settings.update_fps)
 
