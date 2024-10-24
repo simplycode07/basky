@@ -17,5 +17,8 @@ gravity = 1000
 elasticity_y = 0.6
 elasticity_x = 0.8
 
+# camera
+camera_speed = 1
+
 # player
 jump_vel = 500

@@ -26,6 +26,8 @@ class LevelManager:
 
         sep_tilemap = {}
         init_pos = (0, 0)
+        tilemap_height = len(clean_tilemap)
+        tilemap_width = len(clean_tilemap[0])
         for y, x_pos in enumerate(clean_tilemap):
             for x, tile_type in enumerate(x_pos):
                 if clean_tilemap[y][x] != "0" and clean_tilemap[y][x] != "-1":
@@ -37,5 +39,7 @@ class LevelManager:
                 elif tile_type == "-1":
                     init_pos = (x * settings.tilesize, y * settings.tilesize)
 
+        sep_tilemap["height"] = tilemap_height
+        sep_tilemap["width"] = tilemap_width
         # print(sep_tilemap)
         return sep_tilemap, init_pos
