@@ -19,6 +19,7 @@ elasticity_x = 0.8
 
 # camera
 camera_speed = 1
+camera_thresh = 10
 
 # player
 jump_vel = 500

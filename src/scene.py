@@ -28,38 +28,45 @@ class Renderer:
         # self.move_camera(tilemap, (0, 0))
 
         cam_direction = [0, 0]
-        if player.pos.x > settings.screen_width//2:
+        if player.pos.x - settings.screen_width//2 > settings.camera_thresh:
             cam_direction[0] = 1
 
-        elif player.pos.x < settings.screen_width//2:
+        elif player.pos.x - settings.screen_width//2 < settings.camera_thresh:
             cam_direction[0] = -1
 
-        if player.pos.y > settings.screen_height//2:
+        if player.pos.y - settings.screen_height//2 > settings.camera_thresh:
             cam_direction[1] = 1
 
-        elif player.pos.x < settings.screen_height//2:
+        elif player.pos.y - settings.screen_height//2 < settings.camera_thresh:
             cam_direction[1] = -1
 
+
         print(f"cam_dir: {cam_direction}")
-        # self.move_camera(tilemap, cam_direction)
+        self.move_camera(tilemap, cam_direction, player)
         self.surface.blit(player.img, player.pos)
         display.blit(self.surface, (0, 0))
         self.surface.fill(colors["black"])
 
-    def move_camera(self, tilemap, direction:list[int]):
+    # when adding to offset, subtract from player pos 
+    def move_camera(self, tilemap, direction:list[int], player:"Sprite"):
         offset_x_max = (tilemap["width"] - settings.num_tiles_x) * settings.tilesize
         offset_y_max = (tilemap["height"] - settings.num_tiles_y) * settings.tilesize
+
+        old_offsets = (self.offset_x, self.offset_y)
 
         # print(f"offset_max: {offset_x_max}, {offset_y_max}")
 
         if direction[0]:
-            self.offset_x += settings.camera_speed * direction[0]
+            self.offset_x += min(settings.camera_speed * direction[0], player.pos.x - settings.screen_width//2)
 
         if direction[1]:
-            self.offset_y += settings.camera_speed * direction[1]
+            self.offset_y += min(settings.camera_speed * direction[1], player.pos.y - settings.screen_height//2)
 
         self.offset_x = self.clamp(0, self.offset_x, offset_x_max)
         self.offset_y = self.clamp(0, self.offset_y, offset_y_max)
+
+        player.pos.x -= self.offset_x - old_offsets[0]
+        player.pos.y -= self.offset_y - old_offsets[1]
 
     def clamp(self, start, value, end) -> int:
         if value < start:
