@@ -65,10 +65,19 @@ class Sprite:
         # if collided and normal and collision_point:
         if collision_data.collision_status:
             self.pos -= self.vel * delta
-            # print(f"before collision {self.vel.as_polar()}")
             self.vel.reflect_ip(collision_data.normal)
-            self.vel.y = self.vel.y * settings.elasticity
-            # self.vel.rotate_ip(90)
+
+            if abs(collision_data.normal.as_polar()[1]) == 90:
+                self.vel.y = self.vel.y * settings.elasticity_y
+
+            if abs(collision_data.normal.as_polar()[1]) in [0, 180]:
+                self.vel.x = self.vel.x * settings.elasticity_x
+
+            # else:
+            #     print(f"collision {collision_data.normal.as_polar()}")
+            #     self.vel.y = self.vel.y * settings.elasticity_y
+            #     self.vel.x = self.vel.x * settings.elasticity_x
+
             # print(f"after collision {self.vel.as_polar()}")
             # center_to_pos_vec = self.pos - pygame.Vector2(self_rect.center)
             # self.pos = normal + collision_point + center_to_pos_vec

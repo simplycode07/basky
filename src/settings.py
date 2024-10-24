@@ -14,7 +14,8 @@ num_tiles_y = int(screen_height//tilesize)
 
 # physics
 gravity = 1000
-elasticity = 0.6
+elasticity_y = 0.6
+elasticity_x = 0.8
 
 # player
 jump_vel = 500
