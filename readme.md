@@ -4,5 +4,7 @@ Just a hobby project, I was initialing planning on developing it in godot, but t
 
 
 
-https://github.com/user-attachments/assets/0c0bdf76-907f-4be0-bf4c-b860234b4347
+
+https://github.com/user-attachments/assets/20af0d70-2c62-4d68-bff4-6759d5538c41
+
 
