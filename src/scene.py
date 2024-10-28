@@ -47,7 +47,7 @@ class Renderer:
         self.offset_x = self.clamp(0, self.offset_x, offset_x_max)
         self.offset_y = self.clamp(0, self.offset_y, offset_y_max)
         
-        print(f"{self.offset_x - old_offsets[0]}, {self.offset_y - old_offsets[1]}")
+        # print(f"{self.offset_x - old_offsets[0]}, {self.offset_y - old_offsets[1]}")
 
     def clamp(self, start, value, end) -> int:
         if value < start:
