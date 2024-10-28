@@ -49,13 +49,10 @@ class Sprite:
             self.add_impulse(3)
             self.input_positions = []
 
-    def update(self, delta: float, surface, offset: tuple[int, int]):
+    def update(self, delta: float, surface):
         self.pos += self.vel * delta
         position_tilemap = [int((self.pos.x + settings.tilesize//2) // settings.tilesize),
                             int((self.pos.y + settings.tilesize//2) // settings.tilesize)]
-
-        position_tilemap[0] += offset[0]//settings.tilesize
-        position_tilemap[1] += offset[1]//settings.tilesize
 
         # pygame.draw.rect(surface, colors["red"], pygame.Rect(
         #     position_tilemap[0] * settings.tilesize, position_tilemap[1] * settings.tilesize, settings.tilesize, settings.tilesize))
@@ -64,7 +61,7 @@ class Sprite:
 
         # use collision normal
         collision_data = self.get_collision_normal(
-            surface, position_tilemap, self_rect, offset)
+            surface, position_tilemap, self_rect)
         self.vel.y += settings.gravity * delta
 
         # if collided and normal and collision_point:
@@ -89,7 +86,7 @@ class Sprite:
 
     # this functions checks for collision around the player
     # and returns the collision data that has the shortest normal
-    def get_collision_normal(self, surface, position_tilemap, self_rect: pygame.Rect, offset: tuple[int, int]) -> "CollisionData":
+    def get_collision_normal(self, surface, position_tilemap, self_rect: pygame.Rect) -> "CollisionData":
         position_around = [(-1, 1), (-1, -1), (0, 0), (1, 1),
                            (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
 
@@ -102,9 +99,6 @@ class Sprite:
             rect = self.tilemap.get(f"{x};{y}", {}).get("rect")
             # print(f"{x}, {y}, {rect.topleft if rect else ""}")
             if rect:
-                rect = rect.copy()
-                rect.left -= offset[0]
-                rect.top -= offset[1]
                 pygame.draw.rect(surface, colors["red"], rect)
                 collision_info = self.get_collision(
                     rect, pygame.Vector2(self_rect.center))
@@ -167,7 +161,7 @@ class Sprite:
 
     # this function predicts where the player will move according
     # to projectile motion while ignoring collisions
-    def get_path_points(self, limit: int) -> list[tuple[int, int]] | None:
+    def get_path_points(self, limit: int, offset:tuple[int, int]) -> list[tuple[int, int]] | None:
         # this delta is basically the resolution of the path
         # a lower value delta will result in a smoother path
         # but of smaller length because the number of steps are same
@@ -177,6 +171,8 @@ class Sprite:
 
         vel = self.add_impulse(3, self.vel.copy(), mouse_pos)
         x, y = self.pos + pygame.Vector2(self.radius, self.radius)
+        x -= offset[0]
+        y -= offset[1]
 
         if not vel:
             return
