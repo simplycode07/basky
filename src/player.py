@@ -67,12 +67,14 @@ class Sprite:
         # if collided and normal and collision_point:
         if collision_data.collision_status:
             # self.pos -= self.vel * delta
-            if abs(collision_data.normal.as_polar()[1]) == 90:
+            if abs(collision_data.normal.as_polar()[1]) == 90.0:
                 self.pos.y -= self.vel.y * delta
 
-            if abs(collision_data.normal.as_polar()[1]) in [0, 180]:
+            elif abs(collision_data.normal.as_polar()[1]) in [0.0, 180.0]:
                 self.pos.x -= self.vel.x * delta
+
             else:
+                print(f"normal: {collision_data.normal.as_polar()}")
                 self.pos -= self.vel * delta
 
             self.vel.reflect_ip(collision_data.normal)
