@@ -60,7 +60,7 @@ class Sprite:
         self_rect = self.get_self_rect()
 
         # use collision normal
-        collision_data = self.get_collision_normal(
+        collision_data = self.get_tilemap_collision(
             surface, position_tilemap, self_rect)
         self.vel.y += settings.gravity * delta
 
@@ -96,7 +96,7 @@ class Sprite:
 
     # this functions checks for collision around the player
     # and returns the collision data that has the shortest normal
-    def get_collision_normal(self, surface, position_tilemap, self_rect: pygame.Rect) -> "CollisionData":
+    def get_tilemap_collision(self, surface, position_tilemap, self_rect: pygame.Rect) -> "CollisionData":
         position_around = [(-1, 1), (-1, -1), (0, 0), (1, 1),
                            (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
 
@@ -110,7 +110,7 @@ class Sprite:
             # print(f"{x}, {y}, {rect.topleft if rect else ""}")
             if rect:
                 pygame.draw.rect(surface, colors["red"], rect)
-                collision_info = self.get_collision(
+                collision_info = self.get_collision_with_rect(
                     rect, pygame.Vector2(self_rect.center))
 
                 if collision_info.collision_status and old_collision_info.collision_status:
@@ -123,7 +123,7 @@ class Sprite:
         return old_collision_info
 
     # returns collision data between a pygame.Rect object and player
-    def get_collision(self, rect: pygame.Rect, center: pygame.Vector2) -> "CollisionData":
+    def get_collision_with_rect(self, rect: pygame.Rect, center: pygame.Vector2) -> "CollisionData":
         collide_point_x = self.clamp(rect.left, center.x, rect.right)
         collide_point_y = self.clamp(rect.top, center.y, rect.bottom)
 
@@ -159,6 +159,9 @@ class Sprite:
 
         magnitude_x = (point1[0] - point2[0]) * multiplier
         magnitude_y = (point1[1] - point2[1]) * multiplier
+
+        # magnitude_x = min(magnitude_x, settings.vel_cap)
+        # magnitude_y = min(magnitude_y, settings.vel_cap)
 
         if not vel:
             self.vel.x = magnitude_x

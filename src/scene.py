@@ -1,5 +1,6 @@
 import pygame
 
+from src.hoop import Hoop
 from src.player import State, Sprite
 from . import settings, colors
 
@@ -11,7 +12,7 @@ class Renderer:
         self.offset_x = 0
         self.offset_y = 0
 
-    def render(self, display, player:"Sprite", tilemap):
+    def render(self, display, player:"Sprite", hoop:"Hoop", tilemap):
         for x in range(settings.num_tiles_x + 1):
             for y in range(settings.num_tiles_y + 1):
                 tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
@@ -30,8 +31,12 @@ class Renderer:
 
         adjusted_player_pos = player.pos - (self.offset_x, self.offset_y)
         self.move_camera(tilemap, adjusted_player_pos)
+
         self.surface.blit(player.img, adjusted_player_pos)
+        hoop.draw(self.surface, (self.offset_x, self.offset_y))
+        
         display.blit(self.surface, (0, 0))
+
         self.surface.fill(colors["black"])
 
     # when adding to offset, subtract from player pos 
