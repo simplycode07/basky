@@ -32,7 +32,7 @@ class LevelManager:
         tilemap_width = len(clean_tilemap[0])
         for y, x_pos in enumerate(clean_tilemap):
             for x, tile_type in enumerate(x_pos):
-                match = re.search("[(]-2,.*[)]", tile_type)
+                match = re.search(r"\(.*\)", tile_type)
                 # if clean_tilemap[y][x] != "0" and clean_tilemap[y][x] not in ["-1", "-2"]:
                 if clean_tilemap[y][x] == "1":
                     sep_tilemap[f"{x};{y}"] = {"type": tile_type,
@@ -44,8 +44,8 @@ class LevelManager:
                     init_pos_player = (x * settings.tilesize, y * settings.tilesize)
 
                 elif match:
+                    print(tile_type)
                     hoop_info[0] = (x * settings.tilesize, y * settings.tilesize)
-                    print(f"match string: {match.string}")
                     hoop_info[1] = match.string
 
         sep_tilemap["height"] = tilemap_height
