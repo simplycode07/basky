@@ -69,29 +69,31 @@ class Sprite:
 
 
     def handle_collision(self, delta, collision_data: "CollisionData"):
-        if collision_data.collision_status:
-            # self.pos -= self.vel * delta
-            if abs(collision_data.normal.as_polar()[1]) == 90.0:
-                self.pos.y -= self.vel.y * delta
+        if not collision_data.collision_status:
+            return
 
-            elif abs(collision_data.normal.as_polar()[1]) in [0.0, 180.0]:
-                self.pos.x -= self.vel.x * delta
+        # self.pos -= self.vel * delta
+        if abs(collision_data.normal.as_polar()[1]) == 90.0:
+            self.pos.y -= self.vel.y * delta
 
-            else:
-                print(f"normal: {collision_data.normal.as_polar()}")
-                self.pos -= self.vel * delta
+        elif abs(collision_data.normal.as_polar()[1]) in [0.0, 180.0]:
+            self.pos.x -= self.vel.x * delta
 
-            self.vel.reflect_ip(collision_data.normal)
+        else:
+            print(f"normal: {collision_data.normal.as_polar()}")
+            self.pos -= self.vel * delta
 
-            if abs(collision_data.normal.as_polar()[1]) == 90:
-                self.vel.y = self.vel.y * settings.elasticity_y
+        self.vel.reflect_ip(collision_data.normal)
 
-            if abs(collision_data.normal.as_polar()[1]) in [0, 180]:
-                self.vel.x = self.vel.x * settings.elasticity_x
+        if abs(collision_data.normal.as_polar()[1]) == 90:
+            self.vel.y = self.vel.y * settings.elasticity_y
 
-            # print(f"after collision {self.vel.as_polar()}")
-            # center_to_pos_vec = self.pos - pygame.Vector2(self_rect.center)
-            # self.pos = normal + collision_point + center_to_pos_vec
+        if abs(collision_data.normal.as_polar()[1]) in [0, 180]:
+            self.vel.x = self.vel.x * settings.elasticity_x
+
+        # print(f"after collision {self.vel.as_polar()}")
+        # center_to_pos_vec = self.pos - pygame.Vector2(self_rect.center)
+        # self.pos = normal + collision_point + center_to_pos_vec
 
     # this functions checks for collision around the player
     # and returns the collision data that has the shortest normal
