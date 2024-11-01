@@ -65,6 +65,10 @@ class Sprite:
         self.vel.y += settings.gravity * delta
 
         # if collided and normal and collision_point:
+        self.handle_collision(delta, collision_data)
+
+
+    def handle_collision(self, delta, collision_data: "CollisionData"):
         if collision_data.collision_status:
             # self.pos -= self.vel * delta
             if abs(collision_data.normal.as_polar()[1]) == 90.0:
@@ -84,11 +88,6 @@ class Sprite:
 
             if abs(collision_data.normal.as_polar()[1]) in [0, 180]:
                 self.vel.x = self.vel.x * settings.elasticity_x
-
-            # else:
-            #     print(f"collision {collision_data.normal.as_polar()}")
-            #     self.vel.y = self.vel.y * settings.elasticity_y
-            #     self.vel.x = self.vel.x * settings.elasticity_x
 
             # print(f"after collision {self.vel.as_polar()}")
             # center_to_pos_vec = self.pos - pygame.Vector2(self_rect.center)
