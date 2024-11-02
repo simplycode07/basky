@@ -1,7 +1,7 @@
 import pygame
 
-from src.hoop import Hoop
-from src.player import State, Sprite
+from src.physics_entities.hoop import Hoop
+from src.physics_entities.player import State, Sprite
 from . import settings, colors
 
 from math import floor
