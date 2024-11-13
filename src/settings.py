@@ -19,7 +19,8 @@ elasticity_x = 0.8
 
 # this causes angle to change
 # will fix later
-vel_cap = 1e9
+max_impulse = 1250
+senstivity = 5
 
 # camera
 camera_speed = 25

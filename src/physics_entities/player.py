@@ -46,7 +46,7 @@ class Sprite:
 
             self.input_positions.append(mouse_pos)
 
-            self.add_impulse(3)
+            self.add_impulse(settings.senstivity)
             self.input_positions = []
 
     def update(self, delta: float, surface):
@@ -160,17 +160,21 @@ class Sprite:
 
         magnitude_x = (point1[0] - point2[0]) * multiplier
         magnitude_y = (point1[1] - point2[1]) * multiplier
+        impulse = pygame.Vector2(magnitude_x, magnitude_y)
+
+        if impulse.length() > settings.max_impulse:
+            impulse = impulse.normalize() * settings.max_impulse
 
         # magnitude_x = min(magnitude_x, settings.vel_cap)
         # magnitude_y = min(magnitude_y, settings.vel_cap)
 
         if not vel:
-            self.vel.x = magnitude_x
-            self.vel.y = magnitude_y
+            self.vel.x = impulse.x
+            self.vel.y = impulse.y
 
         else:
-            vel.x = magnitude_x
-            vel.y = magnitude_y
+            vel.x = impulse.x
+            vel.y = impulse.y
             return vel
 
     # this function predicts where the player will move according
@@ -183,7 +187,7 @@ class Sprite:
         mouse_pos = pygame.mouse.get_pos()
         trajectory_points = []
 
-        vel = self.add_impulse(3, self.vel.copy(), mouse_pos)
+        vel = self.add_impulse(settings.senstivity, self.vel.copy(), mouse_pos)
         x, y = self.pos + pygame.Vector2(self.radius, self.radius)
         x -= offset[0]
         y -= offset[1]

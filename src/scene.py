@@ -13,6 +13,7 @@ class Renderer:
         self.offset_y = 0
 
     def render(self, display, player:"Sprite", hoop:"Hoop", tilemap):
+        # this renders all the tiles inside the camera
         for x in range(settings.num_tiles_x + 1):
             for y in range(settings.num_tiles_y + 1):
                 tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")

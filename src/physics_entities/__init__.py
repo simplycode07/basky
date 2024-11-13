@@ -18,6 +18,8 @@ class PhysicsEntities:
 
     def update(self, delta, display):
         self.player.update(delta, display)
+
+        # added collision handling with hoop
         center = self.player.get_self_rect().center
         for rect in self.hoop.collision_rects:
             collision_data = self.player.get_collision_with_rect(rect, pygame.Vector2(center))
