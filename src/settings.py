@@ -19,12 +19,10 @@ elasticity_x = 0.8
 
 # this causes angle to change
 # will fix later
-max_impulse = 1250
+# maximum velocity with which player can lauch themselves
+max_impulse = 1500
 senstivity = 5
 
 # camera
 camera_speed = 25
 camera_thresh = 10
-
-# player
-jump_vel = 500
