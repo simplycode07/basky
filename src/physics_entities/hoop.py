@@ -50,8 +50,11 @@ class Hoop:
         if hoop_info[1] == "(-1)":
             pos[0] += -ring_size + settings.tilesize - ring_cross_section_size
 
-        # if hoop_info[1] == "(1)":
-        #     pos[0] -= -ring_size + settings.tilesize - ring_cross_section_size
+        if hoop_info[1] == "(1)":
+            pos[0] -= -ring_size + settings.tilesize - ring_cross_section_size
 
         return (pos[0], pos[1])
+
+
+
 
