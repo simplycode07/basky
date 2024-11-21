@@ -20,6 +20,7 @@ class Hoop:
         self.detection_rect = []
 
         self.color = colors["red"]
+        self.elasticity = 0.3
 
 
     def draw(self, surface: pygame.Surface, offset: tuple[int, int]):
