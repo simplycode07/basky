@@ -21,7 +21,10 @@ class Hoop:
 
         self.color = colors["red"]
         self.elasticity = 0.3
-
+        
+        # this is for the area in which player checks for collision
+        # this is just approximated so make sure the value is atleast more than 32
+        self.collision_range = 100
 
     def draw(self, surface: pygame.Surface, offset: tuple[int, int]):
         converted_rects = self.convert_coords(offset)
