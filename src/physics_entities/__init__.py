@@ -21,11 +21,15 @@ class PhysicsEntities:
 
         center = self.player.get_self_rect().center
 
-        # try increasing hoop.range if the collision does not properly work
+        # this checks for collision with hoop, phsyics and score
         if self.object_near_player(self.hoop):
+            # this checks for physics collision with hoop
             for rect in self.hoop.collision_rects:
                 collision_data = self.player.get_collision_with_rect(rect, pygame.Vector2(center))
                 self.player.handle_collision(delta, collision_data, self.hoop.elasticity)
+
+            if self.hoop.check_for_win(self.player, pygame.Vector2(center)):
+                print("You Win!")
 
     # this checks if any passed object is near the player to do physics
     # the object should have the following attributes
