@@ -1,8 +1,7 @@
 import pygame
-
 from . import level, settings
 
-from .scene import Renderer
+from .scene import Renderer, UIState
 from .physics_entities import PhysicsEntities
 
 class Game:
@@ -13,13 +12,10 @@ class Game:
         self.clock = pygame.time.Clock()
         
         self.level_manager = level.LevelManager("saves/test.save")
-
         level_info = self.level_manager.load_tilemap(0)
         self.physics_module = PhysicsEntities(level_info)
-        # self.player = Sprite(level_info[0], level_info[1])
-        # self.hoop = Hoop(level_info[2])
         self.renderer = Renderer(settings.screen_res)
-
+    
     def run(self):
         running = True
         while running:
@@ -27,11 +23,15 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
 
-                self.physics_module.input(event)
-                # self.player.handle_input(event)
+                if self.renderer.game_state == UIState.GAME:
+                    self.physics_module.handle_input(event)
+                elif self.renderer.game_state == UIState.MENU and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    self.renderer.game_state = UIState.GAME
 
-            # self.player.update(1/settings.physics_fps, self.display)
-            self.physics_module.update(1/settings.physics_fps, self.display)
+
+            if self.renderer.game_state == UIState.GAME:
+                self.physics_module.update(1/settings.physics_fps, self.display)
+
             self.renderer.render(self.display, self.physics_module.player, self.physics_module.hoop, self.physics_module.tilemap)
             pygame.display.update()
             self.clock.tick(settings.update_fps)

@@ -1,40 +1,57 @@
 import pygame
 
+from enum import Enum
+from math import floor
+
 from src.physics_entities.hoop import Hoop
 from src.physics_entities.player import State, Sprite
 from . import settings, colors
 
-from math import floor
+pygame.font.init()
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
+def draw_text(display, text):
+    text_surface = my_font.render(text, False, (255, 255, 255))
+    display.blit(text_surface, (0, 0))
+
+class UIState(Enum):
+    MENU = 0
+    LEVEL_SELECTOR = 1
+    SETTINGS = 2
+    CREDITS = 3
+    GAME = 4
 
 class Renderer:
     def __init__(self, size) -> None:
         self.surface = pygame.Surface(size)
+        self.game_state = UIState.MENU
         self.offset_x = 0
         self.offset_y = 0
 
     def render(self, display, player:"Sprite", hoop:"Hoop", tilemap):
-        # this renders all the tiles inside the camera
-        for x in range(settings.num_tiles_x + 1):
-            for y in range(settings.num_tiles_y + 1):
-                tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
-                if tile and tile["type"] == "1":
-                    tile_rect:pygame.Rect = tile["rect"].copy()
-                    tile_rect.left -= self.offset_x
-                    tile_rect.top -= self.offset_y
-                    pygame.draw.rect(self.surface, colors["green"], tile_rect)
-                    pygame.draw.rect(self.surface, colors["black"], tile_rect, width=1)
+        if self.game_state == UIState.MENU:
+            draw_text(self.surface, "hello world")
+        elif self.game_state == UIState.GAME:
+            for x in range(settings.num_tiles_x + 1):
+                for y in range(settings.num_tiles_y + 1):
+                    tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
+                    if tile and tile["type"] == "1":
+                        tile_rect:pygame.Rect = tile["rect"].copy()
+                        tile_rect.left -= self.offset_x
+                        tile_rect.top -= self.offset_y
+                        pygame.draw.rect(self.surface, colors["green"], tile_rect)
+                        pygame.draw.rect(self.surface, colors["black"], tile_rect, width=1)
 
-        if player.state == State.INPUT:
-            trajectory_points = player.get_path_points(15, (self.offset_x, self.offset_y))
-            if trajectory_points:
-                pygame.draw.lines(self.surface, colors["white"], False, trajectory_points, width=2)
+            if player.state == State.INPUT:
+                trajectory_points = player.get_path_points(15, (self.offset_x, self.offset_y))
+                if trajectory_points:
+                    pygame.draw.lines(self.surface, colors["white"], False, trajectory_points, width=2)
 
 
-        adjusted_player_pos = player.pos - (self.offset_x, self.offset_y)
-        self.move_camera(tilemap, adjusted_player_pos)
+            adjusted_player_pos = player.pos - (self.offset_x, self.offset_y)
+            self.move_camera(tilemap, adjusted_player_pos)
 
-        self.surface.blit(player.img, adjusted_player_pos)
-        hoop.draw(self.surface, (self.offset_x, self.offset_y))
+            self.surface.blit(player.img, adjusted_player_pos)
+            hoop.draw(self.surface, (self.offset_x, self.offset_y))
         
         display.blit(self.surface, (0, 0))
 
@@ -45,7 +62,7 @@ class Renderer:
         offset_x_max = (tilemap["width"] - settings.num_tiles_x) * settings.tilesize
         offset_y_max = (tilemap["height"] - settings.num_tiles_y) * settings.tilesize
 
-        old_offsets = (self.offset_x, self.offset_y)
+        # old_offsets = (self.offset_x, self.offset_y)
 
         self.offset_x += floor((adjusted_player_pos.x - settings.screen_width//2) / settings.camera_speed)
         self.offset_y += floor((adjusted_player_pos.y - settings.screen_height//2) / settings.camera_speed)

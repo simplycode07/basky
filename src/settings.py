@@ -26,3 +26,11 @@ senstivity = 5
 # camera
 camera_speed = 25
 camera_thresh = 10
+
+
+##############################
+#######       UI       #######
+##############################
+
+button_widths = {"large": 100, "medium": 50, "small": 25}
+
