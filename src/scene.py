@@ -3,34 +3,23 @@ import pygame
 from enum import Enum
 from math import floor
 
-from src.physics_entities.hoop import Hoop
-from src.physics_entities.player import State, Sprite
 from . import settings, colors
+from .ui import UIManager, UIState
+from .physics_entities.hoop import Hoop
+from .physics_entities.player import State, Sprite
 
-pygame.font.init()
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
-def draw_text(display, text):
-    text_surface = my_font.render(text, False, (255, 255, 255))
-    display.blit(text_surface, (0, 0))
 
-class UIState(Enum):
-    MENU = 0
-    LEVEL_SELECTOR = 1
-    SETTINGS = 2
-    CREDITS = 3
-    GAME = 4
 
 class Renderer:
     def __init__(self, size) -> None:
         self.surface = pygame.Surface(size)
         self.game_state = UIState.MENU
+        self.ui_manager = UIManager()
         self.offset_x = 0
         self.offset_y = 0
 
     def render(self, display, player:"Sprite", hoop:"Hoop", tilemap):
-        if self.game_state == UIState.MENU:
-            draw_text(self.surface, "hello world")
-        elif self.game_state == UIState.GAME:
+        if self.game_state == UIState.GAME:
             for x in range(settings.num_tiles_x + 1):
                 for y in range(settings.num_tiles_y + 1):
                     tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
@@ -52,6 +41,9 @@ class Renderer:
 
             self.surface.blit(player.img, adjusted_player_pos)
             hoop.draw(self.surface, (self.offset_x, self.offset_y))
+
+        else:
+            self.ui_manager.draw(self.surface, self.game_state)
         
         display.blit(self.surface, (0, 0))
 
