@@ -20,8 +20,6 @@ class Sprite:
 
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                self.vel.y += -settings.jump_vel
             if event.key == pygame.K_d:
                 self.vel.x = 300
             if event.key == pygame.K_a:
