@@ -16,6 +16,7 @@ num_tiles_y = int(screen_height//tilesize)
 gravity = 1000
 elasticity_y = 0.6
 elasticity_x = 0.8
+friction = 0.8
 
 # this causes angle to change
 # will fix later
