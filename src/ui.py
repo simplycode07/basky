@@ -14,7 +14,7 @@ class UIState(Enum):
 
 class UIManager:
     def __init__(self):
-        self.comic_sans = pygame.font.SysFont('Fira Sans', 60)
+        self.comic_sans = pygame.font.SysFont('firacodenerdfont', 60)
 
     def draw(self, surface:pygame.Surface, curr_state:"UIState"):
         if curr_state == UIState.MENU:
