@@ -7,6 +7,7 @@ screen_width = 1216
 screen_height = 800
 
 screen_res = (screen_width, screen_height)
+screen_mid_point = (screen_width//2, screen_height//2)
 
 tilesize = 32
 num_tiles_x = int(screen_width//tilesize)
