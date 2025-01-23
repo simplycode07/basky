@@ -4,22 +4,21 @@ from enum import Enum
 from math import floor
 
 from . import settings, colors
-from .ui import UIManager, UIState
+from .ui import UIState
 from .physics_entities.hoop import Hoop
 from .physics_entities.player import State, Sprite
 
 
 
 class Renderer:
-    def __init__(self, size) -> None:
+    def __init__(self, size, ui_manager) -> None:
         self.surface = pygame.Surface(size)
-        self.game_state = UIState.MENU
-        self.ui_manager = UIManager()
+        self.ui_manager = ui_manager
         self.offset_x = 0
         self.offset_y = 0
 
-    def render(self, display, player:"Sprite", hoop:"Hoop", tilemap):
-        if self.game_state == UIState.GAME:
+    def render(self, display, player:"Sprite", hoop:"Hoop", tilemap, game_state):
+        if game_state == UIState.GAME:
             for x in range(settings.num_tiles_x + 1):
                 for y in range(settings.num_tiles_y + 1):
                     tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
@@ -43,7 +42,7 @@ class Renderer:
             hoop.draw(self.surface, (self.offset_x, self.offset_y))
 
         else:
-            self.ui_manager.draw(self.surface, self.game_state)
+            self.ui_manager.draw(self.surface, game_state)
         
         display.blit(self.surface, (0, 0))
 

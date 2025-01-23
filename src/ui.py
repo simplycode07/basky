@@ -30,3 +30,8 @@ class UIManager:
             pos[1] -= text_surface.get_height()//2
 
         surface.blit(text_surface, pos)
+
+
+class Button:
+    def __init__(self, pos, size, alignment, text):
+        pass
