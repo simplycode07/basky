@@ -30,8 +30,15 @@ fonts = {"fira": [
 
 class UIManager:
     def __init__(self):
-        self.my_button = Button(list(settings.screen_mid_point), 2, 1, "this is my button", [colors["cyan"], (20, 20, 20)])
+        self.my_button = Button(list(settings.screen_mid_point), 2, 1, "this is my button", [colors["white"], colors["black"]])
         pass
+
+    def handle_input(self, event: pygame.event.Event, curr_state: "UIState"):
+        if curr_state == UIState.MENU:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                mouse_state = pygame.mouse.get_pressed()
+                self.my_button.handle_input(mouse_pos, mouse_state)
 
     def draw(self, surface: pygame.Surface, curr_state: "UIState"):
         if curr_state == UIState.MENU:
@@ -51,10 +58,12 @@ class UIManager:
 
 
 class Button:
-    def __init__(self, pos, size, alignment, text, colors):
+    def __init__(self, pos:list[int], size, alignment, text, colors):
         self.text_surface = fonts["fira"][size].render(text, False, colors[0], colors[1])
         
         self.pos = pos
+
+        self.rect = pygame.Rect(*pos, *self.text_surface.get_size())
 
         # alignment 1 is for center aligned
         if alignment == 1:
@@ -62,5 +71,9 @@ class Button:
             self.pos[1] -= self.text_surface.get_height()//2
         
         
+    def handle_input(self, mouse_pos, mouse_state):
+        if self.rect.collidepoint(mouse_pos) and mouse_state == (1, 0, 0):
+            print("button clicked")
+
     def draw(self, surface):
         surface.blit(self.text_surface, self.pos)
