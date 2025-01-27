@@ -16,13 +16,13 @@ class UIState(Enum):
 
 fonts = {"fira": [
             pygame.font.SysFont('firacodenerdfont', 20),
-            pygame.font.SysFont('firacodenerdfont', 40),
-            pygame.font.SysFont('firacodenerdfont', 60)
+            pygame.font.SysFont('firacodenerdfont', 30),
+            pygame.font.SysFont('firacodenerdfont', 40)
         ],
         "notosans": [
             pygame.font.SysFont('notosans', 20),
-            pygame.font.SysFont('notosans', 40),
-            pygame.font.SysFont('notosans', 60)
+            pygame.font.SysFont('notosans', 30),
+            pygame.font.SysFont('notosans', 40)
         ],
 
 }
@@ -30,8 +30,12 @@ fonts = {"fira": [
 
 class UIManager:
     def __init__(self):
-        self.my_button = Button(list(settings.screen_mid_point), 2, 1, "this is my button", [colors["white"], colors["black"]])
-        pass
+        self.my_button = Button(pos=list(settings.screen_mid_point),
+                                size=2,
+                                alignment=(2, 1),
+                                text="this is my button",
+                                colors=[colors["white"], (20, 20, 20)],
+                                on_click=lambda: print("hello world"))
 
     def handle_input(self, event: pygame.event.Event, curr_state: "UIState"):
         if curr_state == UIState.MENU:
@@ -58,22 +62,24 @@ class UIManager:
 
 
 class Button:
-    def __init__(self, pos:list[int], size, alignment, text, colors):
+    # alignment -> (x, y)
+    # alignment 1 will center the button, 2 -> right align, 0 -> left align
+    def __init__(self, pos:list[int], size, alignment, text, colors, on_click):
         self.text_surface = fonts["fira"][size].render(text, False, colors[0], colors[1])
         
         self.pos = pos
 
+        self.pos[0] -= (self.text_surface.get_width() * alignment[0]) //2
+        self.pos[1] -= (self.text_surface.get_height() * alignment[1]) //2
+
         self.rect = pygame.Rect(*pos, *self.text_surface.get_size())
 
-        # alignment 1 is for center aligned
-        if alignment == 1:
-            self.pos[0] -= self.text_surface.get_width()//2
-            self.pos[1] -= self.text_surface.get_height()//2
-        
+        self.on_click = on_click
         
     def handle_input(self, mouse_pos, mouse_state):
         if self.rect.collidepoint(mouse_pos) and mouse_state == (1, 0, 0):
             print("button clicked")
+            self.on_click()
 
     def draw(self, surface):
         surface.blit(self.text_surface, self.pos)
