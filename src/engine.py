@@ -1,7 +1,7 @@
 import pygame
 from . import level, settings
 
-from .scene import Renderer, UIState
+from .scene import Renderer
 from .physics_entities import PhysicsEntities
 from .ui import UIManager, UIState
 
