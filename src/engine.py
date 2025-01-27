@@ -30,6 +30,13 @@ class Game:
 
                 if self.game_state == UIState.GAME:
                     self.physics_module.handle_input(event)
+
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        self.game_state = UIState.PAUSE
+
+                elif self.game_state == UIState.PAUSE:
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        self.game_state = UIState.GAME
                 else:
                     change_state, new_state = self.ui_manager.handle_input(event, self.game_state)
                     if change_state: self.game_state = UIState(new_state)

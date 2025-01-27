@@ -12,6 +12,7 @@ class UIState(Enum):
     SETTINGS = 2
     CREDITS = 3
     GAME = 4
+    PAUSE = 5
 
     @classmethod
     def from_name(cls, state):
@@ -39,7 +40,7 @@ class UIManager:
                                 alignment=(1, 1),
                                 text="Start Game",
                                 colors=[colors["white"], (20, 20, 20)],
-                                on_click=lambda: print("hello world"),
+                                on_click=lambda: print("Button Pressed"),
                                 next_state=UIState.GAME)
 
     def handle_input(self, event: pygame.event.Event, curr_state: "UIState"):
@@ -50,6 +51,7 @@ class UIManager:
                 mouse_pos = pygame.mouse.get_pos()
                 mouse_state = pygame.mouse.get_pressed()
                 change_state, new_state = self.my_button.handle_input(mouse_pos, mouse_state)
+
         
         return (change_state, new_state)
 
@@ -57,13 +59,14 @@ class UIManager:
         if curr_state == UIState.MENU:
             self.my_button.draw(surface)
 
-    def draw_text(self, surface, text, pos=[0, 0], align_center=True):
-        text_surface = fonts["notosans"][2].render(text, False, (255, 255, 255))
+        if curr_state == UIState.PAUSE:
+            self.draw_text(surface, "Game Paused", pos=list(settings.screen_mid_point), alignment=[1, 1])
 
-        if align_center:
-            pos[0] -= text_surface.get_width()//2
-            pos[1] -= text_surface.get_height()//2
+    def draw_text(self, surface, text, pos=[0, 0], alignment=[0, 0]):
+        text_surface = fonts["fira"][2].render(text, False, (255, 255, 255))
 
+        pos[0] -= (text_surface.get_width() * alignment[0]) //2
+        pos[1] -= (text_surface.get_height() * alignment[1]) //2
         surface.blit(text_surface, pos)
 
 
