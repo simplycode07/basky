@@ -34,7 +34,7 @@ class LevelManager:
             for x, tile_type in enumerate(x_pos):
                 match = re.search(r"\(.*\)", tile_type)
                 # if clean_tilemap[y][x] != "0" and clean_tilemap[y][x] not in ["-1", "-2"]:
-                if clean_tilemap[y][x] == "1":
+                if clean_tilemap[y][x] == "1" or clean_tilemap[y][x] == "2":
                     sep_tilemap[f"{x};{y}"] = {"type": tile_type,
                                                "rect": pygame.Rect(
                         x*settings.tilesize, y*settings.tilesize, settings.tilesize, settings.tilesize),
