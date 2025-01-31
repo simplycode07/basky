@@ -29,6 +29,13 @@ class Renderer:
                         pygame.draw.rect(self.surface, colors["green"], tile_rect)
                         pygame.draw.rect(self.surface, colors["black"], tile_rect, width=1)
 
+                    if tile and tile["type"] == "2":
+                        tile_rect:pygame.Rect = tile["rect"].copy()
+                        tile_rect.left -= self.offset_x
+                        tile_rect.top -= self.offset_y
+                        pygame.draw.rect(self.surface, colors["red"], tile_rect)
+                        # pygame.draw.rect(self.surface, colors["black"], tile_rect, width=1)
+
             if player.state == State.INPUT:
                 trajectory_points = player.get_path_points(15, (self.offset_x, self.offset_y))
                 if trajectory_points:
@@ -46,7 +53,7 @@ class Renderer:
         
         display.blit(self.surface, (0, 0))
 
-        self.surface.fill(colors["black"])
+        self.surface.fill(colors["background"])
 
     # when adding to offset, subtract from player pos 
     def move_camera(self, tilemap, adjusted_player_pos):

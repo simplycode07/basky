@@ -34,12 +34,37 @@ class LevelManager:
             for x, tile_type in enumerate(x_pos):
                 match = re.search(r"\(.*\)", tile_type)
                 # if clean_tilemap[y][x] != "0" and clean_tilemap[y][x] not in ["-1", "-2"]:
-                if clean_tilemap[y][x] == "1" or clean_tilemap[y][x] == "2":
+                if clean_tilemap[y][x] == "1":
                     sep_tilemap[f"{x};{y}"] = {"type": tile_type,
                                                "rect": pygame.Rect(
                         x*settings.tilesize, y*settings.tilesize, settings.tilesize, settings.tilesize),
                                                "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
 
+                elif clean_tilemap[y][x] == "2":
+                    x_rect, y_rect, w, h = x*settings.tilesize, y*settings.tilesize, settings.tilesize, settings.tilesize
+                    
+                    # calculates the placement and size of the tiles
+                    if clean_tilemap[y+1][x] == "1":
+                        y_rect += settings.tilesize // 2
+                        h -= settings.tilesize // 2
+
+                    elif clean_tilemap[y-1][x] == "1":
+                        # y_rect += settings.tilesize // 2
+                        h -= settings.tilesize // 2
+                    
+                    elif clean_tilemap[y][x+1] == "1":
+                        x_rect += settings.tilesize // 2
+                        w -= settings.tilesize // 2
+
+                    elif clean_tilemap[y][x-1] == "1":
+                        # x_rect -= settings.tilesize // 2
+                        w -= settings.tilesize // 2
+
+                    sep_tilemap[f"{x};{y}"] = {"type": tile_type,
+                                               "rect": pygame.Rect(x_rect, y_rect, w, h),
+                                               "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
+
+                
                 elif tile_type == "-1":
                     init_pos_player = (x * settings.tilesize, y * settings.tilesize)
 
