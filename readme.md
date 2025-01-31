@@ -1,5 +1,5 @@
 # Basky
-Just a hobby project, I was initialing planning on developing it in godot, but the physics felt weird so I made it in python with pygame
+Just a hobby project. I was initialing planning on developing it in godot, but ~~the physics felt weird~~ it wasn't **FUN ENOUGH** so I made it in python with pygame. Also because I like torturing myself
 
 ### Install Dependencies
 ```bash
