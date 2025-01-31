@@ -12,6 +12,7 @@ class UIState(Enum):
     CREDITS = 3
     GAME = 4
     PAUSE = 5
+    GAME_END = 6
 
     @classmethod
     def from_name(cls, state):
@@ -46,6 +47,9 @@ class UIManager:
         if curr_state == UIState.PAUSE:
             self.draw_text(surface, "Game Paused", pos=list(settings.screen_mid_point), alignment=[1, 1])
 
+        if curr_state == UIState.GAME_END:
+            self.draw_text(surface, "you ded", pos=list(settings.screen_mid_point), alignment=[1, 2])
+            self.draw_text(surface, "press return to start again", pos=list(settings.screen_mid_point), alignment=[1, 0])
     def draw_text(self, surface, text, pos=[0, 0], alignment=[0, 0]):
         text_surface = fonts["fira"][2].render(text, False, (255, 255, 255))
 

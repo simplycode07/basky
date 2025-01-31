@@ -17,7 +17,7 @@ class PhysicsEntities:
         self.player.handle_input(event)
 
     def update(self, delta, display):
-        self.player.update(delta, display)
+        change_state, new_state = self.player.update(delta, display)
 
         center = self.player.get_self_rect().center
 
@@ -30,6 +30,8 @@ class PhysicsEntities:
 
             if self.hoop.check_for_win(self.player, pygame.Vector2(center)):
                 print("You Win!")
+
+        return (change_state, new_state)
 
     # this checks if any passed object is near the player to do physics
     # the object should have the following attributes

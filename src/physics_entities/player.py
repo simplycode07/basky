@@ -1,4 +1,6 @@
 import pygame
+
+from src.ui import UIState
 from . import settings, colors
 from enum import Enum
 
@@ -13,6 +15,8 @@ class Sprite:
 
         self.img = pygame.image.load("assets/basky_32x32.png")
         self.angle = 0
+
+        self.health = 3
 
         self.input_positions = []
 
@@ -62,10 +66,19 @@ class Sprite:
             surface, position_tilemap, self_rect)
         self.vel.y += settings.gravity * delta
 
-        if collision_data.collision_with == "2": print("fuck yeah!!")
+        if collision_data.collision_with == "2":
+            self.health -= 1
 
         # if collided and normal and collision_point:
         self.handle_collision(delta, collision_data)
+
+        change_state = False
+        new_state = None
+        if self.health <= 0:
+            change_state = True
+            new_state = UIState.GAME_END
+        
+        return (change_state, new_state)
 
 
     def handle_collision(self, delta, collision_data: "CollisionData", elasticity:float=0):

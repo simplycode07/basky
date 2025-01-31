@@ -13,8 +13,8 @@ class Game:
         self.clock = pygame.time.Clock()
         
         self.level_manager = level.LevelManager("saves/test.save")
-        level_info = self.level_manager.load_tilemap(0)
-        self.physics_module = PhysicsEntities(level_info)
+        self.level_info = self.level_manager.load_tilemap(0)
+        self.physics_module = PhysicsEntities(self.level_info)
 
         self.game_state = UIState.MENU
         self.ui_manager = UIManager()
@@ -43,10 +43,12 @@ class Game:
 
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                         self.game_state = UIState.GAME
+                        self.physics_module = PhysicsEntities(self.level_info)
 
 
             if self.game_state == UIState.GAME:
-                self.physics_module.update(1/settings.physics_fps, self.display)
+                change_state, new_state = self.physics_module.update(1/settings.physics_fps, self.display)
+                if change_state: self.game_state = UIState(new_state)
 
             self.renderer.render(self.display, self.physics_module.player, self.physics_module.hoop, self.physics_module.tilemap, self.game_state)
             pygame.display.update()
