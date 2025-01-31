@@ -62,6 +62,8 @@ class Sprite:
             surface, position_tilemap, self_rect)
         self.vel.y += settings.gravity * delta
 
+        if collision_data.collision_with == "2": print("fuck yeah!!")
+
         # if collided and normal and collision_point:
         self.handle_collision(delta, collision_data)
 
@@ -107,18 +109,19 @@ class Sprite:
         position_around = [(-1, 1), (-1, -1), (0, 0), (1, 1),
                            (1, -1), (-1, 0), (1, 0), (0, 1), (0, -1)]
 
-        old_collision_info = CollisionData(False, None, None)
+        old_collision_info = CollisionData(False, None, None, None)
 
         for pos in position_around:
             x = position_tilemap[0] + pos[0]
             y = position_tilemap[1] + pos[1]
 
             rect = self.tilemap.get(f"{x};{y}", {}).get("rect")
+            tile_type = self.tilemap.get(f"{x};{y}", {}).get("type")
             # print(f"{x}, {y}, {rect.topleft if rect else ""}")
             if rect:
                 pygame.draw.rect(surface, colors["red"], rect)
                 collision_info = self.get_collision_with_rect(
-                    rect, pygame.Vector2(self_rect.center))
+                    rect, pygame.Vector2(self_rect.center), tile_type)
 
                 if collision_info.collision_status and old_collision_info.collision_status:
                     if collision_info.normal.length() < old_collision_info.normal.length():
@@ -130,12 +133,12 @@ class Sprite:
         return old_collision_info
 
     # returns collision data between a pygame.Rect object and player
-    def get_collision_with_rect(self, rect: pygame.Rect, center: pygame.Vector2) -> "CollisionData":
+    def get_collision_with_rect(self, rect: pygame.Rect, center: pygame.Vector2, tile_type) -> "CollisionData":
         collide_point_x = self.clamp(rect.left, center.x, rect.right)
         collide_point_y = self.clamp(rect.top, center.y, rect.bottom)
 
         collide_point = pygame.Vector2(collide_point_x, collide_point_y)
-        collision_info = CollisionData(False, None, None)
+        collision_info = CollisionData(False, None, None, None)
         collision_normal = center - collide_point
 
         # the length != 0 check is to avoid reflecting along a NULL vector
@@ -144,6 +147,7 @@ class Sprite:
             collision_info.update_normal(pygame.Vector2(
                 center.x - collide_point_x, center.y - collide_point_y))
             collision_info.update_collision_point(collide_point)
+            collision_info.update_collision_with(tile_type)
             # print(f"inside get_collision {collision_normal}, {center}, {collide_point}, {collision_normal.length()}")
             # print(True, collision_normal.as_polar(), collide_point)
 
@@ -216,15 +220,17 @@ class State(Enum):
 
 
 class CollisionData:
-    def __init__(self, collision_detected, normal, collision_point) -> None:
+    def __init__(self, collision_detected:bool, normal:pygame.Vector2 | None, collision_point:pygame.Vector2 | None, collision_with: str | None) -> None:
         self.collision_status = collision_detected
         self.normal = normal
         self.collision_point = collision_point
+        self.collision_with = collision_with
 
     def update_all(self, collision_info: "CollisionData"):
         self.update_collision_point(collision_info.collision_point)
         self.update_normal(collision_info.normal)
         self.update_collision_status(collision_info.collision_status)
+        self.update_collision_with(collision_info.collision_with)
 
     def update_normal(self, new_normal):
         self.normal = new_normal
@@ -234,3 +240,6 @@ class CollisionData:
 
     def update_collision_status(self, new_collision_status):
         self.collision_status = new_collision_status
+
+    def update_collision_with(self, new_collision_with):
+        self.collision_with = new_collision_with
