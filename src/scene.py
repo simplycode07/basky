@@ -4,7 +4,7 @@ from enum import Enum
 from math import floor
 
 from . import settings, colors
-from .ui import UIState
+from .ui import UIState, fonts
 from .physics_entities.hoop import Hoop
 from .physics_entities.player import State, Sprite
 
@@ -48,12 +48,23 @@ class Renderer:
             self.surface.blit(player.img, adjusted_player_pos)
             hoop.draw(self.surface, (self.offset_x, self.offset_y))
 
+            self.draw_text(self.surface, f" health: {player.health} ", pos=[10, 10], alignment=[0, 0])
+
         else:
             self.ui_manager.draw(self.surface, game_state)
         
         display.blit(self.surface, (0, 0))
-
         self.surface.fill(colors["background"])
+
+
+    def draw_text(self, surface, text, pos=[0, 0], alignment=[0, 0]):
+        text_surface = fonts["notosans"][1].render(text, False, colors["white"], colors["background"])
+
+        pos[0] -= (text_surface.get_width() * alignment[0]) //2
+        pos[1] -= (text_surface.get_height() * alignment[1]) //2
+
+        surface.blit(text_surface, pos)
+        pygame.draw.rect(surface, colors["white"], text_surface.get_rect(topleft=pos), width=2)
 
     # when adding to offset, subtract from player pos 
     def move_camera(self, tilemap, adjusted_player_pos):
