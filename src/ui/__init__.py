@@ -26,8 +26,15 @@ class UIManager:
                                 text="Start Game",
                                 colors=[colors["white"], (20, 20, 20)],
                                 on_click=lambda: print("Button Pressed"),
-                                next_state=UIState.GAME)
+                                next_state=UIState.LEVEL_SELECTOR)
 
+        self.level_selector_button = Button(pos=list(settings.screen_mid_point),
+                                size=2,
+                                alignment=[1, 2],
+                                text="Start level 0",
+                                colors=[colors["white"], colors["cyan"]],
+                                on_click=lambda: print("level selector Button Pressed"),
+                                next_state=0)
     def handle_input(self, event: pygame.event.Event, curr_state: "UIState"):
         change_state, new_state = False, None
 
@@ -36,6 +43,13 @@ class UIManager:
                 mouse_pos = pygame.mouse.get_pos()
                 mouse_state = pygame.mouse.get_pressed()
                 change_state, new_state = self.my_button.handle_input(mouse_pos, mouse_state)
+
+        if curr_state == UIState.LEVEL_SELECTOR:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                mouse_state = pygame.mouse.get_pressed()
+                change_state, new_state = self.level_selector_button.handle_input(mouse_pos, mouse_state)
+
 
         
         return (change_state, new_state)
@@ -47,9 +61,14 @@ class UIManager:
         if curr_state == UIState.PAUSE:
             self.draw_text(surface, "Game Paused", pos=list(settings.screen_mid_point), alignment=[1, 1])
 
+        if curr_state == UIState.LEVEL_SELECTOR:
+            self.level_selector_button.draw(surface)
+            self.draw_text(surface, "This is level selector", pos=list(settings.screen_mid_point), alignment=[1, 0])
+
         if curr_state == UIState.GAME_END:
             self.draw_text(surface, "you ded", pos=list(settings.screen_mid_point), alignment=[1, 2])
             self.draw_text(surface, "press return to start again", pos=list(settings.screen_mid_point), alignment=[1, 0])
+
     def draw_text(self, surface, text, pos=[0, 0], alignment=[0, 0]):
         text_surface = fonts["fira"][2].render(text, False, (255, 255, 255))
 

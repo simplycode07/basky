@@ -37,13 +37,27 @@ class Game:
                 elif self.game_state == UIState.PAUSE:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.game_state = UIState.GAME
-                else:
+
+                elif self.game_state == UIState.MENU:
                     change_state, new_state = self.ui_manager.handle_input(event, self.game_state)
                     if change_state: self.game_state = UIState(new_state)
 
+                    # if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    #     self.game_state = UIState.GAME
+                    #     self.physics_module = PhysicsEntities(self.level_info)
+                elif self.game_state == UIState.LEVEL_SELECTOR:
+                    level_selected, level = self.ui_manager.handle_input(event, self.game_state)
+                    if level_selected:
+                        self.game_state = UIState.GAME
+                        self.level_info = self.level_manager.load_tilemap(level)
+                        self.physics_module = PhysicsEntities(self.level_info)
+
+
+                elif self.game_state == UIState.GAME_END:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                         self.game_state = UIState.GAME
                         self.physics_module = PhysicsEntities(self.level_info)
+
 
 
             if self.game_state == UIState.GAME:
