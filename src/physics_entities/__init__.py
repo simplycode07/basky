@@ -25,7 +25,7 @@ class PhysicsEntities:
         if self.object_near_player(self.hoop):
             # this checks for physics collision with hoop
             for rect in self.hoop.collision_rects:
-                collision_data = self.player.get_collision_with_rect(rect, pygame.Vector2(center))
+                collision_data = self.player.get_collision_with_rect(rect, pygame.Vector2(center), "(-1)")
                 self.player.handle_collision(delta, collision_data, self.hoop.elasticity)
 
             if self.hoop.check_for_win(self.player, pygame.Vector2(center)):

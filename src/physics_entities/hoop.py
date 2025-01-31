@@ -65,7 +65,7 @@ class Hoop:
     # and also the y velocity of the player should be +ive
     def check_for_win(self, player:"Sprite", center:pygame.Vector2):
         old_win_stat = self.win_stat
-        self.win_stat = player.get_collision_with_rect(self.win_rect, center).collision_status
+        self.win_stat = player.get_collision_with_rect(self.win_rect, center, "(-1)").collision_status
 
         if old_win_stat and not self.win_stat:
             if player.vel.y > 0:
