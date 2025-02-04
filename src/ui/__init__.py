@@ -14,9 +14,6 @@ class UIState(Enum):
     PAUSE = 5
     GAME_END = 6
 
-    @classmethod
-    def from_name(cls, state):
-        return cls(state)
 
 class UIManager:
     def __init__(self):
