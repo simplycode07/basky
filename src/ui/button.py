@@ -16,7 +16,7 @@ fonts = {"fira": [
 class Button:
     # alignment -> (x, y)
     # alignment 1 will center the button, 2 -> right align, 0 -> left align
-    def __init__(self, pos:list[int], size, alignment, text, colors, on_click, next_state):
+    def __init__(self, pos:list[int], size, alignment, text, colors, next_state, on_click=None):
         self.text_surface = fonts["fira"][size].render(text, False, colors[0], colors[1])
         
         self.pos = pos
@@ -32,11 +32,30 @@ class Button:
         
     def handle_input(self, mouse_pos, mouse_state):
         if self.rect.collidepoint(mouse_pos) and mouse_state == (1, 0, 0):
-            print("button clicked")
-            self.on_click()
+
+            if self.on_click: self.on_click()
+
             return (True, self.next_state)
 
         return (False, None)
 
     def draw(self, surface):
         surface.blit(self.text_surface, self.pos)
+
+
+
+class ButtonList:
+    def __init__(self) -> None:
+        self.buttons = []
+
+    def handle_input(self, mouse_pos, mouse_state):
+        for button in self.buttons:
+            change_state, new_state = button.handle_input(mouse_pos, mouse_state)
+
+            if change_state:
+                return change_state, new_state
+
+        return (False, None)
+
+    def draw(self, surface):
+        for button in self.buttons: button.draw(surface)

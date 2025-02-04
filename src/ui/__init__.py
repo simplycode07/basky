@@ -3,7 +3,7 @@ import pygame
 from enum import Enum
 from src import settings, colors
 
-from .button import fonts, Button
+from .button import fonts, Button, ButtonList
 
 class UIState(Enum):
     MENU = 0
@@ -17,21 +17,10 @@ class UIState(Enum):
 
 class UIManager:
     def __init__(self):
-        self.my_button = Button(pos=list(settings.screen_mid_point),
-                                size=2,
-                                alignment=(1, 1),
-                                text="Start Game",
-                                colors=[colors["white"], (20, 20, 20)],
-                                on_click=lambda: print("Button Pressed"),
-                                next_state=UIState.LEVEL_SELECTOR)
+        self.start_menu = StartMenu()
+        self.level_selector = LevelSelector()
+        self.level_selector.add_level_buttons((5, 9), (50, 50), (100, 100), 20)
 
-        self.level_selector_button = Button(pos=list(settings.screen_mid_point),
-                                size=2,
-                                alignment=[1, 2],
-                                text="Start level 0",
-                                colors=[colors["white"], colors["cyan"]],
-                                on_click=lambda: print("level selector Button Pressed"),
-                                next_state=0)
     def handle_input(self, event: pygame.event.Event, curr_state: "UIState"):
         change_state, new_state = False, None
 
@@ -39,13 +28,13 @@ class UIManager:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 mouse_state = pygame.mouse.get_pressed()
-                change_state, new_state = self.my_button.handle_input(mouse_pos, mouse_state)
+                change_state, new_state = self.start_menu.handle_input(mouse_pos, mouse_state)
 
         if curr_state == UIState.LEVEL_SELECTOR:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 mouse_state = pygame.mouse.get_pressed()
-                change_state, new_state = self.level_selector_button.handle_input(mouse_pos, mouse_state)
+                change_state, new_state = self.level_selector.handle_input(mouse_pos, mouse_state)
 
 
         
@@ -53,14 +42,14 @@ class UIManager:
 
     def draw(self, surface: pygame.Surface, curr_state: "UIState"):
         if curr_state == UIState.MENU:
-            self.my_button.draw(surface)
+            self.start_menu.draw(surface)
 
         if curr_state == UIState.PAUSE:
             self.draw_text(surface, "Game Paused", pos=list(settings.screen_mid_point), alignment=[1, 1])
 
         if curr_state == UIState.LEVEL_SELECTOR:
-            self.level_selector_button.draw(surface)
-            self.draw_text(surface, "This is level selector", pos=list(settings.screen_mid_point), alignment=[1, 0])
+            self.level_selector.draw(surface)
+            # self.draw_text(surface, "This is level selector", pos=list(settings.screen_mid_point), alignment=[1, 0])
 
         if curr_state == UIState.GAME_END:
             self.draw_text(surface, "you ded", pos=list(settings.screen_mid_point), alignment=[1, 2])
@@ -74,3 +63,51 @@ class UIManager:
         surface.blit(text_surface, pos)
 
 
+class LevelSelector(ButtonList):
+    def __init__(self) -> None:
+        self.buttons = [Button(pos=[10, 10],
+                               size=2,
+                               alignment=(0, 0),
+                               text="Back",
+                               colors=[colors["white"], colors["background"]],
+                               next_state=UIState.MENU,
+
+                        ),
+                        ]
+
+    def add_level_buttons(self, matrix, gaps, start_pos, total_levels):
+        for i in range(1, total_levels):
+            x = gaps[0] * (i % matrix[1]) + start_pos[0]
+            y = gaps[1] * ((i // matrix[1]) % matrix[0]) + start_pos[1]
+            print(f"{x},{y} for {i}")
+            self.buttons.append(Button(pos=[x, y],
+                                       size=1,
+                                       alignment=(0,0),
+                                       text=f"{i}",
+                                       colors=[colors["white"], (50, 50, 50)],
+                                       next_state=f"{i}"
+                                       )
+                                )
+
+class StartMenu(ButtonList):
+    def __init__(self) -> None:
+        self.buttons = [
+                Button(pos=list(settings.screen_mid_point),
+                       size=2,
+                       alignment=(1, 2),
+                       text="Start Game",
+                       colors=[colors["white"], colors["background"]],
+                       next_state=UIState.LEVEL_SELECTOR,
+                       # on_click=lambda: print("Button Pressed"),
+                      ),
+            
+
+                Button(pos=list(settings.screen_mid_point),
+                       size=2,
+                       alignment=(1, 0),
+                       text="Settings",
+                       colors=[colors["white"], colors["background"]],
+                       next_state=UIState.SETTINGS,
+                       # on_click=lambda: print("Button Pressed"),
+                     ),
+                ]
