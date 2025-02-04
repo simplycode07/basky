@@ -77,13 +77,13 @@ class LevelSelector(ButtonList):
 
     def add_level_buttons(self, matrix, gaps, start_pos, total_levels):
         for i in range(1, total_levels):
-            x = gaps[0] * (i % matrix[1]) + start_pos[0]
-            y = gaps[1] * ((i // matrix[1]) % matrix[0]) + start_pos[1]
+            x = gaps[0] * ((i - 1) % matrix[1]) + start_pos[0]
+            y = gaps[1] * (((i - 1) // matrix[1])) + start_pos[1]
             print(f"{x},{y} for {i}")
             self.buttons.append(Button(pos=[x, y],
                                        size=1,
                                        alignment=(0,0),
-                                       text=f"{i}",
+                                       text=f"{i:2}",
                                        colors=[colors["white"], (50, 50, 50)],
                                        next_state=f"{i}"
                                        )
