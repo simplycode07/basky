@@ -65,7 +65,7 @@ class LevelManager:
                                                "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
 
                 
-                elif tile_type == "-1":
+                elif tile_type == "-2":
                     init_pos_player = (x * settings.tilesize, y * settings.tilesize)
 
                 elif match:

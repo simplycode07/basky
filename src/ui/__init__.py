@@ -85,7 +85,7 @@ class LevelSelector(ButtonList):
                                        alignment=(0,0),
                                        text=f"{i:2}",
                                        colors=[colors["white"], (50, 50, 50)],
-                                       next_state=f"{i}"
+                                       next_state=f"{i-1}"
                                        )
                                 )
 
