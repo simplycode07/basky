@@ -33,6 +33,9 @@ class PhysicsEntities:
 
         return (change_state, new_state)
 
+    def reset(self):
+        self.player.reset()
+
     # this checks if any passed object is near the player to do physics
     # the object should have the following attributes
     # 1) x, y -> current position

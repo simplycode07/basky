@@ -56,7 +56,7 @@ class Game:
                 elif self.game_state == UIState.GAME_END:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                         self.game_state = UIState.GAME
-                        self.physics_module = PhysicsEntities(self.level_info)
+                        self.physics_module.reset()
 
 
 

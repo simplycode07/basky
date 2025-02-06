@@ -10,6 +10,7 @@ class Sprite:
         self.tilemap = tilemap
 
         self.pos = pygame.Vector2(init_pos[0], init_pos[1])
+        self.init_pos = self.pos.copy()
         self.vel = pygame.Vector2(0, 0)
         self.radius = int(settings.tilesize//2)
 
@@ -115,6 +116,13 @@ class Sprite:
         # print(f"after collision {self.vel.as_polar()}")
         # center_to_pos_vec = self.pos - pygame.Vector2(self_rect.center)
         # self.pos = normal + collision_point + center_to_pos_vec
+
+    def reset(self):
+        self.state = State.NORMAL
+        self.pos = self.init_pos.copy()
+        self.health = 3
+        self.vel = pygame.Vector2(0, 0)
+
 
     # this functions checks for collision around the player
     # and returns the collision data that has the shortest normal
