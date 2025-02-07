@@ -24,11 +24,11 @@ class Sprite:
         self.state = State.NORMAL
 
     def handle_input(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_d:
-                self.vel.x = 300
-            if event.key == pygame.K_a:
-                self.vel.x = -300
+        # if event.type == pygame.KEYDOWN:
+            # if event.key == pygame.K_d:
+            #     self.vel.x = 300
+            # if event.key == pygame.K_a:
+            #     self.vel.x = -300
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_d or event.key == pygame.K_a:
