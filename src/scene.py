@@ -34,7 +34,12 @@ class Renderer:
                         tile_rect.left -= self.offset_x
                         tile_rect.top -= self.offset_y
 
-                        self.surface.blit(tile["image"], tile["pixel_coor"])
+                        # tile["pixel_coor"][0] -= self.offset_x
+                        # tile["pixel_coor"][1] -= self.offset_y
+
+
+                        # self.surface.blit(tile["image"], tile["pixel_coor"])
+                        self.surface.blit(tile["image"], [tile["pixel_coor"][0] - self.offset_x, tile["pixel_coor"][1] - self.offset_y])
 
                         # draw hitboxes
                         # pygame.draw.rect(self.surface, colors["red"], tile_rect, width=1)

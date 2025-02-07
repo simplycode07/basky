@@ -79,7 +79,6 @@ class LevelSelector(ButtonList):
         for i in range(1, total_levels):
             x = gaps[0] * ((i - 1) % matrix[1]) + start_pos[0]
             y = gaps[1] * (((i - 1) // matrix[1])) + start_pos[1]
-            print(f"{x},{y} for {i}")
             self.buttons.append(Button(pos=[x, y],
                                        size=1,
                                        alignment=(0,0),
