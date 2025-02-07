@@ -1,6 +1,9 @@
-name: Python Windows Build
+name: Build Windows Executable
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # or your desired branch
 
 jobs:
   build:
@@ -10,21 +13,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11'
-
-    - name: Install dependencies
+    - name: Install Wine
       run: |
-        pip install pyinstaller pygame
+        sudo dpkg --add-architecture i386
+        sudo apt update
+        sudo apt install -y wine32 wine64
 
-    - name: Build Windows executable
+    - name: Set up Python for Wine
       run: |
-        pyinstaller --onefile --distpath dist/windows main.py
-    
+        wget https://www.python.org/ftp/python/3.9.1/python-3.9.1.exe
+        wine python-3.9.1.exe /quiet InstallAllUsers=1 PrependPath=1
+
+    - name: Install dependencies using Wine
+      run: |
+        wine python -m pip install pyinstaller
+
+    - name: Build Windows executable using Wine
+      run: |
+        wine python -m PyInstaller --onefile main.py
+
     - name: Upload Windows executable as artifact
       uses: actions/upload-artifact@v4
       with:
         name: windows-executable
-        path: dist/windows/main.exe
+        path: dist/main.exe  # Make sure to update the path if necessary
