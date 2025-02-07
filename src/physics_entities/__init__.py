@@ -1,6 +1,7 @@
 import pygame
 
 from src import settings, colors
+from src.ui import UIState
 from .player import Sprite
 from .hoop import Hoop
 
@@ -29,7 +30,9 @@ class PhysicsEntities:
                 self.player.handle_collision(delta, collision_data, self.hoop.elasticity)
 
             if self.hoop.check_for_win(self.player, pygame.Vector2(center)):
-                print("You Win!")
+                change_state = True
+                new_state = UIState.LEVEL_SELECTOR
+                # print("You Win!")
 
         return (change_state, new_state)
 

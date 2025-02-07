@@ -47,10 +47,13 @@ class Game:
                     #     self.physics_module = PhysicsEntities(self.level_info)
                 elif self.game_state == UIState.LEVEL_SELECTOR:
                     level_selected, level = self.ui_manager.handle_input(event, self.game_state)
-                    if level_selected:
-                        self.game_state = UIState.GAME
-                        self.level_info = self.level_manager.load_tilemap(level)
-                        self.physics_module = PhysicsEntities(self.level_info)
+                    if level_selected :
+                        if isinstance(level, UIState):
+                            self.game_state = level
+                        else:
+                            self.game_state = UIState.GAME
+                            self.level_info = self.level_manager.load_tilemap(level)
+                            self.physics_module = PhysicsEntities(self.level_info)
 
 
                 elif self.game_state == UIState.GAME_END:
