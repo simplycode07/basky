@@ -67,7 +67,7 @@ class Sprite:
             surface, position_tilemap, self_rect)
         self.vel.y += settings.gravity * delta
 
-        if collision_data.collision_with == "2":
+        if collision_data.collision_with == "spike":
             self.health -= 1
 
         # if collided and normal and collision_point:

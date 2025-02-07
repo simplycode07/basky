@@ -35,35 +35,50 @@ class LevelManager:
                 match = re.search(r"\(.*\)", tile_type)
                 # if clean_tilemap[y][x] != "0" and clean_tilemap[y][x] not in ["-1", "-2"]:
                 if clean_tilemap[y][x] == "1":
-                    sep_tilemap[f"{x};{y}"] = {"type": tile_type,
+                    sep_tilemap[f"{x};{y}"] = {"type": "wall",
                                                "rect": pygame.Rect(
                         x*settings.tilesize, y*settings.tilesize, settings.tilesize, settings.tilesize),
                                                "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
 
+                # east
                 elif clean_tilemap[y][x] == "2":
-                    x_rect, y_rect, w, h = x*settings.tilesize, y*settings.tilesize, settings.tilesize, settings.tilesize
-                    
-                    # calculates the placement and size of the tiles
-                    if clean_tilemap[y+1][x] == "1":
-                        y_rect += settings.tilesize // 2
-                        h -= settings.tilesize // 2
-
-                    elif clean_tilemap[y-1][x] == "1":
-                        # y_rect += settings.tilesize // 2
-                        h -= settings.tilesize // 2
-                    
-                    elif clean_tilemap[y][x+1] == "1":
-                        x_rect += settings.tilesize // 2
-                        w -= settings.tilesize // 2
-
-                    elif clean_tilemap[y][x-1] == "1":
-                        # x_rect -= settings.tilesize // 2
-                        w -= settings.tilesize // 2
-
-                    sep_tilemap[f"{x};{y}"] = {"type": tile_type,
-                                               "rect": pygame.Rect(x_rect, y_rect, w, h),
+                    sep_tilemap[f"{x};{y}"] = {"type": "spike",
+                                               "rect": pygame.Rect(x*settings.tilesize,
+                                                                   y*settings.tilesize,
+                                                                   settings.tilesize//2,
+                                                                   settings.tilesize),
+                                               "image": pygame.image.load("assets/spike_east.png"),
                                                "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
 
+                # west
+                elif clean_tilemap[y][x] == "3":
+                    sep_tilemap[f"{x};{y}"] = {"type": "spike",
+                                               "rect": pygame.Rect(x*settings.tilesize + settings.tilesize//2,
+                                                                   y*settings.tilesize,
+                                                                   settings.tilesize//2,
+                                                                   settings.tilesize),
+                                               "image": pygame.image.load("assets/spike_west.png"),
+                                               "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
+
+                # north
+                elif clean_tilemap[y][x] == "4":
+                    sep_tilemap[f"{x};{y}"] = {"type": "spike",
+                                               "rect": pygame.Rect(x*settings.tilesize,
+                                                                   y*settings.tilesize + settings.tilesize//2,
+                                                                   settings.tilesize,
+                                                                   settings.tilesize//2),
+                                               "image": pygame.image.load("assets/spike_north.png"),
+                                               "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
+
+                # south
+                elif clean_tilemap[y][x] == "5":
+                    sep_tilemap[f"{x};{y}"] = {"type": "spike",
+                                               "rect": pygame.Rect(x*settings.tilesize,
+                                                                   y*settings.tilesize,
+                                                                   settings.tilesize,
+                                                                   settings.tilesize//2),
+                                               "image": pygame.image.load("assets/spike_south.png"),
+                                               "pixel_coor":(x*settings.tilesize, y*settings.tilesize)}
                 
                 elif tile_type == "-2":
                     init_pos_player = (x * settings.tilesize, y * settings.tilesize)

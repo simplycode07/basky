@@ -22,19 +22,22 @@ class Renderer:
             for x in range(settings.num_tiles_x + 1):
                 for y in range(settings.num_tiles_y + 1):
                     tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
-                    if tile and tile["type"] == "1":
+                    if tile and tile["type"] == "wall":
                         tile_rect:pygame.Rect = tile["rect"].copy()
                         tile_rect.left -= self.offset_x
                         tile_rect.top -= self.offset_y
                         pygame.draw.rect(self.surface, colors["green"], tile_rect)
                         pygame.draw.rect(self.surface, colors["black"], tile_rect, width=1)
 
-                    if tile and tile["type"] == "2":
+                    if tile and tile["type"] == "spike":
                         tile_rect:pygame.Rect = tile["rect"].copy()
                         tile_rect.left -= self.offset_x
                         tile_rect.top -= self.offset_y
-                        pygame.draw.rect(self.surface, colors["red"], tile_rect)
-                        # pygame.draw.rect(self.surface, colors["black"], tile_rect, width=1)
+
+                        self.surface.blit(tile["image"], tile["pixel_coor"])
+
+                        # draw hitboxes
+                        # pygame.draw.rect(self.surface, colors["red"], tile_rect, width=1)
 
             if player.state == State.INPUT:
                 trajectory_points = player.get_path_points(15, (self.offset_x, self.offset_y))
