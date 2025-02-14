@@ -17,11 +17,11 @@ class Renderer:
         self.offset_x = 0
         self.offset_y = 0
 
-    def render(self, display, player:"Sprite", hoop:"Hoop", tilemap, game_state):
+    def render(self, display, physics_module, game_state):
         if game_state == UIState.GAME:
             for x in range(settings.num_tiles_x + 1):
                 for y in range(settings.num_tiles_y + 1):
-                    tile = tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
+                    tile = physics_module.tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
                     if tile and tile["type"] == "wall":
                         tile_rect:pygame.Rect = tile["rect"].copy()
                         tile_rect.left -= self.offset_x
@@ -44,19 +44,19 @@ class Renderer:
                         # draw hitboxes
                         # pygame.draw.rect(self.surface, colors["red"], tile_rect, width=1)
 
-            if player.state == State.INPUT:
-                trajectory_points = player.get_path_points(15, (self.offset_x, self.offset_y))
+            if physics_module.player.state == State.INPUT:
+                trajectory_points = physics_module.player.get_path_points(15, (self.offset_x, self.offset_y))
                 if trajectory_points:
                     pygame.draw.lines(self.surface, colors["white"], False, trajectory_points, width=2)
 
 
-            adjusted_player_pos = player.pos - (self.offset_x, self.offset_y)
-            self.move_camera(tilemap, adjusted_player_pos)
+            adjusted_player_pos = physics_module.player.pos - (self.offset_x, self.offset_y)
+            self.move_camera(physics_module.tilemap, adjusted_player_pos)
 
-            self.surface.blit(player.img, adjusted_player_pos)
-            hoop.draw(self.surface, (self.offset_x, self.offset_y))
+            self.surface.blit(physics_module.player.img, adjusted_player_pos)
+            physics_module.hoop.draw(self.surface, (self.offset_x, self.offset_y))
 
-            self.draw_text(self.surface, f" health: {player.health} ", pos=[10, 10], alignment=[0, 0])
+            self.draw_text(self.surface, f" health: {physics_module.player.health} ", pos=[10, 10], alignment=[0, 0])
 
         else:
             self.ui_manager.draw(self.surface, game_state)

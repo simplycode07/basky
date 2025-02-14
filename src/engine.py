@@ -66,6 +66,6 @@ class Game:
                 change_state, new_state = self.physics_module.update(1/settings.physics_fps, self.display)
                 if change_state: self.game_state = UIState(new_state)
 
-            self.renderer.render(self.display, self.physics_module.player, self.physics_module.hoop, self.physics_module.tilemap, self.game_state)
+            self.renderer.render(self.display, self.physics_module, self.game_state)
             pygame.display.update()
             self.clock.tick(settings.update_fps)
