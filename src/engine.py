@@ -1,9 +1,12 @@
 import pygame
+
+from src.physics_entities.player import State
 from . import level, settings
 
 from .scene import Renderer
 from .physics_entities import PhysicsEntities
 from .ui import UIManager, UIState
+from src import physics_entities
 
 class Game:
     def __init__(self) -> None:
@@ -63,9 +66,19 @@ class Game:
 
 
             if self.game_state == UIState.GAME:
-                change_state, new_state = self.physics_module.update(1/settings.physics_fps, self.display)
+                # probably a thing with my system
+                # when the game starts with a lower fps (due to perfomance issue) the speed of player changes, which is not desirable
+
+                last_fps = self.clock.get_fps()
+                phys_update_fps = settings.physics_fps
+
+                # checking for player state, to actually slowdown the movement for input
+                if self.physics_module.player.state != State.INPUT:
+                    phys_update_fps = min(settings.physics_fps, last_fps)
+
+                change_state, new_state = self.physics_module.update(1/phys_update_fps, self.display)
                 if change_state: self.game_state = UIState(new_state)
 
             self.renderer.render(self.display, self.physics_module, self.game_state)
             pygame.display.update()
-            self.clock.tick(settings.update_fps)
+            self.clock.tick_busy_loop(settings.update_fps)
