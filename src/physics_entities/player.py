@@ -124,6 +124,7 @@ class Sprite:
         self.pos = self.init_pos.copy()
         self.health = 3
         self.vel = pygame.Vector2(0, 0)
+        self.input_positions = []
 
 
     # this functions checks for collision around the player
