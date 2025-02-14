@@ -1,12 +1,10 @@
 import pygame
 
-from enum import Enum
 from math import floor
 
 from . import settings, colors
 from .ui import UIState, fonts
-from .physics_entities.hoop import Hoop
-from .physics_entities.player import State, Sprite
+from .physics_entities.player import State
 
 
 
