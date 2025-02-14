@@ -66,7 +66,7 @@ class Game:
 
 
             if self.game_state == UIState.GAME:
-                # probably a thing with my system
+                # probably a thing with my system, I blame auto-cpufreq
                 # when the game starts with a lower fps (due to perfomance issue) the speed of player changes, which is not desirable
 
                 last_fps = self.clock.get_fps()
