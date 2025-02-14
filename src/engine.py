@@ -29,10 +29,9 @@ class Game:
                     running = False
 
                 if self.game_state == UIState.GAME:
-                    self.physics_module.handle_input(event)
+                    change_state, new_state = self.physics_module.handle_input(event)
 
-                    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                        self.game_state = UIState.PAUSE
+                    if change_state: self.game_state = new_state
 
                 elif self.game_state == UIState.PAUSE:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:

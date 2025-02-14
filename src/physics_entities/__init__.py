@@ -15,7 +15,7 @@ class PhysicsEntities:
         self.hoop = Hoop(hoop_info)
 
     def handle_input(self, event):
-        self.player.handle_input(event)
+        return self.player.handle_input(event)
 
     def update(self, delta, display):
         change_state, new_state = self.player.update(delta, display)

@@ -24,19 +24,19 @@ class Sprite:
         self.state = State.NORMAL
 
     def handle_input(self, event):
-        # if event.type == pygame.KEYDOWN:
-            # if event.key == pygame.K_d:
-            #     self.vel.x = 300
-            # if event.key == pygame.K_a:
-            #     self.vel.x = -300
+        change_state = False
+        new_state = None
 
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_d or event.key == pygame.K_a:
-                self.vel.x = 0
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                change_state = True
+                new_state = UIState.PAUSE
 
         mouse_state = pygame.mouse.get_pressed()
         mouse_pos = list(pygame.mouse.get_pos())
 
+        if len(self.input_positions) == 0:
+            self.state = State.NORMAL
         if len(self.input_positions) == 0 and mouse_state[0]:
             settings.physics_fps /= settings.input_slow_motion
             self.state = State.INPUT
@@ -51,6 +51,8 @@ class Sprite:
 
             self.add_impulse(settings.senstivity)
             self.input_positions = []
+        
+        return change_state, new_state
 
     def update(self, delta: float, surface):
         self.pos += self.vel * delta
