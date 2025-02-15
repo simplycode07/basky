@@ -47,12 +47,14 @@ class Renderer:
                 if trajectory_points:
                     pygame.draw.lines(self.surface, colors["white"], False, trajectory_points, width=2)
 
-
             adjusted_player_pos = physics_module.player.pos - (self.offset_x, self.offset_y)
             self.move_camera(physics_module.tilemap, adjusted_player_pos)
 
             self.surface.blit(physics_module.player.img, adjusted_player_pos)
             physics_module.hoop.draw(self.surface, (self.offset_x, self.offset_y))
+            
+            if physics_module.player.damage_timeout:
+                self.show_damage()
 
             self.draw_text(self.surface, f" health: {physics_module.player.health} ", pos=[10, 10], alignment=[0, 0])
 
@@ -61,6 +63,10 @@ class Renderer:
         
         display.blit(self.surface, (0, 0))
         self.surface.fill(colors["background"])
+    
+    
+    def show_damage(self):
+        pygame.draw.rect(self.surface, colors["red"], pygame.Rect(100, 100, 20, 20))
 
 
     def draw_text(self, surface, text, pos=[0, 0], alignment=[0, 0]):

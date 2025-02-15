@@ -24,15 +24,9 @@ friction = 0.8
 # maximum velocity with which player can lauch themselves
 max_impulse = 1500
 senstivity = 5
+damage_timeout = 20
 
 # camera
 camera_speed = 25
 camera_thresh = 10
-
-
-##############################
-#######       UI       #######
-##############################
-
-button_widths = {"large": 100, "medium": 50, "small": 25}
 

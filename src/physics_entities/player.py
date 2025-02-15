@@ -18,6 +18,7 @@ class Sprite:
         self.angle = 0
 
         self.health = 3
+        self.damage_timeout = 0.0
 
         self.input_positions = []
 
@@ -55,6 +56,9 @@ class Sprite:
         return change_state, new_state
 
     def update(self, delta: float, surface):
+        if self.damage_timeout != 0:
+            self.damage_timeout = max(0, self.damage_timeout - delta * 100)
+
         self.pos += self.vel * delta
         position_tilemap = [int((self.pos.x + settings.tilesize//2) // settings.tilesize),
                             int((self.pos.y + settings.tilesize//2) // settings.tilesize)]
@@ -69,8 +73,10 @@ class Sprite:
             surface, position_tilemap, self_rect)
         self.vel.y += settings.gravity * delta
 
-        if collision_data.collision_with == "spike":
+        if collision_data.collision_with == "spike" and self.damage_timeout == 0:
             self.health -= 1
+            self.damage_timeout = settings.damage_timeout
+
 
         # if collided and normal and collision_point:
         self.handle_collision(delta, collision_data)
@@ -125,7 +131,6 @@ class Sprite:
         self.health = 3
         self.vel = pygame.Vector2(0, 0)
         self.input_positions = []
-
 
     # this functions checks for collision around the player
     # and returns the collision data that has the shortest normal
