@@ -131,6 +131,7 @@ class Sprite:
         self.health = 3
         self.vel = pygame.Vector2(0, 0)
         self.input_positions = []
+        self.damage_timeout = 0
 
     # this functions checks for collision around the player
     # and returns the collision data that has the shortest normal
