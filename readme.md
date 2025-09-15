@@ -1,4 +1,5 @@
-# Basky
+![basky logo](./assets/basky_32x32.png)
+# Basky 
 Just a hobby project. I was initially planning on developing it in godot, but ~~the physics felt weird~~ it wasn't **FUN ENOUGH** so I made it in python with pygame. Also because I like torturing myself
 
 ### Install Dependencies
