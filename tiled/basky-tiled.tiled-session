@@ -1,15 +1,78 @@
 {
-    "activeFile": "",
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level2.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "2025-01-28_21-19.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 0.75
+        },
+        ":/automap-tiles.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "basky-tileset.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "level-no.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2186.3636363636365,
+                "y": 1004.5454545454544
+            }
+        },
+        "level1.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 801,
+                "y": 673
+            }
+        },
+        "level2.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 803,
+                "y": 729
+            }
+        },
+        "presentation.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 943,
+                "y": 467
+            }
+        }
     },
+    "last.exportedFilePath": "/home/dhruv/projects/basky/tilemaps",
     "last.imagePath": "/home/dhruv/Downloads",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "basky-tileset.tsx",
+        "level2.tmx",
+        "level1.tmx",
+        "presentation.tmx"
     ],
     "project": "basky-tiled.tiled-project",
     "recentFiles": [
+        "level-no.tmx",
+        "level1.tmx",
+        "basky-tileset.tsx",
+        "presentation.tmx",
+        "level2.tmx",
+        "2025-01-28_21-19.tsx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }
