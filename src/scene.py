@@ -7,6 +7,8 @@ from .ui import UIState, fonts
 from .physics_entities.player import State
 
 
+text_font = pygame.font.SysFont("Arial", 30)
+
 
 class Renderer:
     def __init__(self, size, ui_manager) -> None:
@@ -15,11 +17,11 @@ class Renderer:
         self.offset_x = 0
         self.offset_y = 0
 
-    def render(self, display, physics_module, game_state):
+    def render(self, display, physics_module, game_state, level_info):
         if game_state == UIState.GAME:
             for x in range(settings.num_tiles_x + 1):
                 for y in range(settings.num_tiles_y + 1):
-                    tile = physics_module.tilemap.get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
+                    tile = level_info[0].get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
                     if tile and tile["type"] == "wall":
                         tile_rect:pygame.Rect = tile["rect"].copy()
                         tile_rect.left -= self.offset_x
@@ -41,6 +43,12 @@ class Renderer:
 
                         # draw hitboxes
                         # pygame.draw.rect(self.surface, colors["red"], tile_rect, width=1)
+            for text_object in level_info[3]:
+                text_surface = text_font.render(text_object["text"]["text"], True, (255, 255, 255))
+                text_position_x = text_object["x"] - self.offset_x
+                text_position_y = text_object["y"] - self.offset_y
+                self.surface.blit(text_surface, (text_position_x, text_position_y))
+
 
             if physics_module.player.state == State.INPUT:
                 trajectory_points = physics_module.player.get_path_points(15, (self.offset_x, self.offset_y))
@@ -48,7 +56,7 @@ class Renderer:
                     pygame.draw.lines(self.surface, colors["white"], False, trajectory_points, width=2)
 
             adjusted_player_pos = physics_module.player.pos - (self.offset_x, self.offset_y)
-            self.move_camera(physics_module.tilemap, adjusted_player_pos)
+            self.move_camera(level_info[0], adjusted_player_pos)
 
             self.surface.blit(physics_module.player.img, adjusted_player_pos)
             physics_module.hoop.draw(self.surface, (self.offset_x, self.offset_y))
