@@ -16,8 +16,11 @@ class Game:
         self.clock = pygame.time.Clock()
         
         self.level_manager = level.LevelManager("saves/test.save")
-        self.level_info = self.level_manager.load_tilemap(0)
-        self.physics_module = PhysicsEntities(self.level_info)
+        # self.level_info = self.level_manager.load_tilemap(0)
+        # self.physics_module = PhysicsEntities(self.level_info)
+
+        self.level_info = None
+        self.physics_module = None
 
         self.game_state = UIState.MENU
         self.ui_manager = UIManager()
@@ -79,6 +82,6 @@ class Game:
                 change_state, new_state = self.physics_module.update(1/phys_update_fps, self.display)
                 if change_state: self.game_state = UIState(new_state)
 
-            self.renderer.render(self.display, self.physics_module, self.game_state)
+            self.renderer.render(self.display, self.physics_module, self.game_state, self.level_info)
             pygame.display.update()
             self.clock.tick_busy_loop(settings.update_fps)
