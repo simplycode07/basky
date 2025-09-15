@@ -7,7 +7,7 @@ from .ui import UIState, fonts
 from .physics_entities.player import State
 
 
-text_font = pygame.font.SysFont("Arial", 30)
+text_fonts = {}
 
 
 class Renderer:
@@ -44,6 +44,14 @@ class Renderer:
                         # draw hitboxes
                         # pygame.draw.rect(self.surface, colors["red"], tile_rect, width=1)
             for text_object in level_info[3]:
+                font_family = text_object["text"]["fontfamily"]
+                font_size = text_object["text"]["pixelsize"]
+                text_font = text_fonts.get(f"{font_family};{font_size}")
+
+                if text_font == None:
+                    text_fonts[f"{font_family};{font_size}"] = pygame.font.SysFont(font_family, font_size)
+                    text_font = text_fonts[f"{font_family};{font_size}"]
+
                 text_surface = text_font.render(text_object["text"]["text"], True, (255, 255, 255))
                 text_position_x = text_object["x"] - self.offset_x
                 text_position_y = text_object["y"] - self.offset_y
