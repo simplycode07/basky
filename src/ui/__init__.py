@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 from enum import Enum
 from src import settings, colors
@@ -27,15 +28,22 @@ class UIManager:
         if curr_state == UIState.MENU:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
+                mouse_pos_new = (mouse_pos[0]//settings.scaling, mouse_pos[1]//settings.scaling)
                 mouse_state = pygame.mouse.get_pressed()
-                change_state, new_state = self.start_menu.handle_input(mouse_pos, mouse_state)
+                print(mouse_pos)
+                change_state, new_state = self.start_menu.handle_input(mouse_pos_new, mouse_state)
 
         if curr_state == UIState.LEVEL_SELECTOR:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
+                mouse_pos_new = (mouse_pos[0]//settings.scaling, mouse_pos[1]//settings.scaling)
                 mouse_state = pygame.mouse.get_pressed()
-                change_state, new_state = self.level_selector.handle_input(mouse_pos, mouse_state)
+                change_state, new_state = self.level_selector.handle_input(mouse_pos_new, mouse_state)
 
+        if curr_state == UIState.CREDITS:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                change_state = True
+                new_state = UIState.MENU
 
         
         return (change_state, new_state)
@@ -54,9 +62,13 @@ class UIManager:
         if curr_state == UIState.GAME_END:
             self.draw_text(surface, "you ded", pos=list(settings.screen_mid_point), alignment=[1, 2])
             self.draw_text(surface, "press return to start again", pos=list(settings.screen_mid_point), alignment=[1, 0])
+        
+        if curr_state == UIState.CREDITS:
+            self.draw_text(surface, "Thanks for bearing with me!", size=1, pos=list(settings.screen_mid_point), alignment=[1, 2])
+            self.draw_text(surface, "Hope to see you in one of the Game Jam", size=1, pos=list(settings.screen_mid_point), alignment=[1, 0])
 
-    def draw_text(self, surface, text, pos=[0, 0], alignment=[0, 0]):
-        text_surface = fonts["fira"][2].render(text, False, (255, 255, 255))
+    def draw_text(self, surface, text, size=2, pos=[0, 0], alignment=[0, 0]):
+        text_surface = fonts["fira"][size].render(text, True, (255, 255, 255))
 
         pos[0] -= (text_surface.get_width() * alignment[0]) //2
         pos[1] -= (text_surface.get_height() * alignment[1]) //2
@@ -93,7 +105,7 @@ class StartMenu(ButtonList):
         self.buttons = [
                 Button(pos=list(settings.screen_mid_point),
                        size=2,
-                       alignment=(1, 2),
+                       alignment=(1, 3),
                        text="Start Game",
                        colors=[colors["white"], colors["background"]],
                        next_state=UIState.LEVEL_SELECTOR,
@@ -103,10 +115,21 @@ class StartMenu(ButtonList):
 
                 Button(pos=list(settings.screen_mid_point),
                        size=2,
-                       alignment=(1, 0),
+                       alignment=(1, 1),
                        text="Settings",
                        colors=[colors["white"], colors["background"]],
                        next_state=UIState.SETTINGS,
                        # on_click=lambda: print("Button Pressed"),
                      ),
+
+                Button(pos=list(settings.screen_mid_point),
+                       size=2,
+                       alignment=(1, -1),
+                       text="Quit",
+                       colors=[colors["white"], colors["background"]],
+                       next_state=UIState.SETTINGS,
+                       on_click=sys.exit
+                       # on_click=lambda: print("Button Pressed"),
+                     ),
+                
                 ]

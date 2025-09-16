@@ -3,8 +3,9 @@ update_fps = 120
 
 input_slow_motion = 0.2
 
-screen_width = 1216
-screen_height = 800
+screen_width = 960
+screen_height = 540
+scaling = 2
 
 screen_res = (screen_width, screen_height)
 screen_mid_point = (screen_width//2, screen_height//2)

@@ -17,10 +17,11 @@ class Renderer:
         self.offset_x = 0
         self.offset_y = 0
 
-    def render(self, display, physics_module, game_state, level_info):
+    def render(self, physics_module, game_state, level_info):
+        self.surface.fill(colors["background"])
         if game_state == UIState.GAME:
-            for x in range(settings.num_tiles_x + 1):
-                for y in range(settings.num_tiles_y + 1):
+            for x in range(settings.num_tiles_x + 2):
+                for y in range(settings.num_tiles_y + 2):
                     tile = level_info[0].get(f"{x + self.offset_x//settings.tilesize};{y + self.offset_y//settings.tilesize}")
                     if tile and tile["type"] == "wall":
                         tile_rect:pygame.Rect = tile["rect"].copy()
@@ -52,7 +53,7 @@ class Renderer:
                     text_fonts[f"{font_family};{font_size}"] = pygame.font.SysFont(font_family, font_size)
                     text_font = text_fonts[f"{font_family};{font_size}"]
 
-                text_surface = text_font.render(text_object["text"]["text"], True, (255, 255, 255))
+                text_surface = text_font.render(text_object["text"]["text"], False, (255, 255, 255))
                 text_position_x = text_object["x"] - self.offset_x
                 text_position_y = text_object["y"] - self.offset_y
                 self.surface.blit(text_surface, (text_position_x, text_position_y))
@@ -77,8 +78,8 @@ class Renderer:
         else:
             self.ui_manager.draw(self.surface, game_state)
         
-        display.blit(self.surface, (0, 0))
-        self.surface.fill(colors["background"])
+        # display.blit(self.surface, (0, 0))
+        return self.surface
     
     
     def show_damage(self):

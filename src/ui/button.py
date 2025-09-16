@@ -2,14 +2,14 @@ import pygame
 
 pygame.font.init()
 fonts = {"fira": [
-            pygame.font.SysFont('firacodenerdfont', 20),
-            pygame.font.SysFont('firacodenerdfont', 30),
-            pygame.font.SysFont('firacodenerdfont', 40)
+            pygame.font.SysFont('firacodenerdfont', 10),
+            pygame.font.SysFont('firacodenerdfont', 15),
+            pygame.font.SysFont('firacodenerdfont', 20)
         ],
         "notosans": [
-            pygame.font.SysFont('notosans', 20),
-            pygame.font.SysFont('notosans', 30),
-            pygame.font.SysFont('notosans', 40)
+            pygame.font.SysFont('notosans', 10),
+            pygame.font.SysFont('notosans', 15),
+            pygame.font.SysFont('notosans', 20)
         ],
 
 }
@@ -17,7 +17,7 @@ class Button:
     # alignment -> (x, y)
     # alignment 1 will center the button, 2 -> right align, 0 -> left align
     def __init__(self, pos:list[int], size, alignment, text, colors, next_state, on_click=None):
-        self.text_surface = fonts["fira"][size].render(text, False, colors[0], colors[1])
+        self.text_surface = fonts["fira"][size].render(text, True, colors[0], colors[1])
         
         self.pos = pos
 

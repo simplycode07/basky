@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level2.tmx",
+    "activeFile": "presentation.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -42,16 +42,16 @@
             "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 803,
-                "y": 729
+                "x": 283,
+                "y": 728
             }
         },
         "presentation.tmx": {
-            "scale": 0.5,
-            "selectedLayer": 0,
+            "scale": 0.75,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 943,
-                "y": 467
+                "x": 152.66666666666663,
+                "y": 657.3333333333333
             }
         }
     },
@@ -62,16 +62,15 @@
     "openFiles": [
         "basky-tileset.tsx",
         "level2.tmx",
-        "level1.tmx",
         "presentation.tmx"
     ],
     "project": "basky-tiled.tiled-project",
     "recentFiles": [
+        "presentation.tmx",
+        "basky-tileset.tsx",
+        "level2.tmx",
         "level-no.tmx",
         "level1.tmx",
-        "basky-tileset.tsx",
-        "presentation.tmx",
-        "level2.tmx",
         "2025-01-28_21-19.tsx"
     ],
     "tileset.lastUsedFormat": "tsx"

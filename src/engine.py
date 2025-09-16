@@ -12,7 +12,8 @@ class Game:
     def __init__(self) -> None:
         pygame.init()
 
-        self.display = pygame.display.set_mode(settings.screen_res)
+        self.display = pygame.display.set_mode((settings.screen_width * settings.scaling, settings.screen_height * settings.scaling))
+        self.scaled_surface = pygame.Surface((settings.screen_width * settings.scaling, settings.screen_height * settings.scaling))
         self.clock = pygame.time.Clock()
         
         self.level_manager = level.LevelManager("saves/test.save")
@@ -43,13 +44,10 @@ class Game:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.game_state = UIState.GAME
 
-                elif self.game_state == UIState.MENU:
+                elif self.game_state == UIState.MENU or self.game_state == UIState.CREDITS:
                     change_state, new_state = self.ui_manager.handle_input(event, self.game_state)
                     if change_state: self.game_state = UIState(new_state)
 
-                    # if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                    #     self.game_state = UIState.GAME
-                    #     self.physics_module = PhysicsEntities(self.level_info)
                 elif self.game_state == UIState.LEVEL_SELECTOR:
                     level_selected, level = self.ui_manager.handle_input(event, self.game_state)
                     if level_selected :
@@ -67,7 +65,6 @@ class Game:
                         self.physics_module.reset()
 
 
-
             if self.game_state == UIState.GAME:
                 # probably a thing with my system, I blame auto-cpufreq
                 # when the game starts with a lower fps (due to perfomance issue) the speed of player changes, which is not desirable
@@ -82,6 +79,11 @@ class Game:
                 change_state, new_state = self.physics_module.update(1/phys_update_fps, self.display)
                 if change_state: self.game_state = UIState(new_state)
 
-            self.renderer.render(self.display, self.physics_module, self.game_state, self.level_info)
+            surface = self.renderer.render(self.physics_module, self.game_state, self.level_info)
+            scaled_surface = pygame.transform.scale_by(surface, settings.scaling)
+            # pygame.transform.scale2x(surface, self.scaled_surface)
+
+            self.display.blit(scaled_surface, (0, 0))
+
             pygame.display.update()
             self.clock.tick_busy_loop(settings.update_fps)

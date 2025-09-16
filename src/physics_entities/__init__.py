@@ -31,7 +31,7 @@ class PhysicsEntities:
 
             if self.hoop.check_for_win(self.player, pygame.Vector2(center)):
                 change_state = True
-                new_state = UIState.LEVEL_SELECTOR
+                new_state = UIState.CREDITS
                 # print("You Win!")
 
         return (change_state, new_state)
