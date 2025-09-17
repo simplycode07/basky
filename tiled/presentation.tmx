@@ -53,7 +53,7 @@
    <text fontfamily="FiraCode Nerd Font" pixelsize="19" wrap="1">Presented By,</text>
   </object>
   <object id="3" x="97.6408" y="394.268" width="644.385" height="47.1302">
-   <text fontfamily="Cascadia Code" pixelsize="19" wrap="1" bold="1">What is Game Development?</text>
+   <text fontfamily="FiraCode Nerd Font" pixelsize="19" wrap="1">What is Game Development?</text>
   </object>
   <object id="4" x="191.474" y="453.102" width="910.052" height="58.4636">
    <text fontfamily="FiraCode Nerd Font" pixelsize="19" wrap="1">Dhruv Dubey, Member of Core Team SDC</text>
