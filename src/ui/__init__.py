@@ -21,6 +21,8 @@ class UIManager:
         self.start_menu = StartMenu()
         self.level_selector = LevelSelector()
         self.level_selector.add_level_buttons((5, 9), (50, 50), (100, 100), 20)
+        self.github_qr = pygame.image.load("assets/github.png")
+        self.linkedin_qr = pygame.image.load("assets/linkedin.png")
 
     def handle_input(self, event: pygame.event.Event, curr_state: "UIState"):
         change_state, new_state = False, None
@@ -64,6 +66,17 @@ class UIManager:
             self.draw_text(surface, "press return to start again", pos=list(settings.screen_mid_point), alignment=[1, 0])
         
         if curr_state == UIState.CREDITS:
+            github_qr_x = settings.screen_width // 4 - self.github_qr.get_width() // 2
+            linkedin_qr_x = settings.screen_width * 3 // 4 - self.linkedin_qr.get_width() // 2
+
+            github_qr_y = settings.screen_height // 6
+            linkedin_qr_y = settings.screen_height // 6
+
+            surface.blit(self.github_qr, (github_qr_x, github_qr_y))
+            surface.blit(self.linkedin_qr, (linkedin_qr_x, linkedin_qr_y))
+            self.draw_text(surface, "Github", size=1, pos=[github_qr_x, github_qr_y + self.github_qr.get_height()])
+            self.draw_text(surface, "LinkedIn", size=1, pos=[linkedin_qr_x, linkedin_qr_y + self.linkedin_qr.get_height()])
+
             self.draw_text(surface, "Thanks for bearing with me!", size=1, pos=list(settings.screen_mid_point), alignment=[1, 2])
             self.draw_text(surface, "Hope to see you in one of the Game Jam", size=1, pos=list(settings.screen_mid_point), alignment=[1, 0])
 

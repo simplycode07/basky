@@ -53,7 +53,7 @@ class Renderer:
                     text_fonts[f"{font_family};{font_size}"] = pygame.font.SysFont(font_family, font_size)
                     text_font = text_fonts[f"{font_family};{font_size}"]
 
-                text_surface = text_font.render(text_object["text"]["text"], False, (255, 255, 255))
+                text_surface = text_font.render(text_object["text"]["text"], True, (255, 255, 255))
                 text_position_x = text_object["x"] - self.offset_x
                 text_position_y = text_object["y"] - self.offset_y
                 self.surface.blit(text_surface, (text_position_x, text_position_y))
@@ -87,7 +87,7 @@ class Renderer:
 
 
     def draw_text(self, surface, text, pos=[0, 0], alignment=[0, 0]):
-        text_surface = fonts["notosans"][1].render(text, False, colors["white"], colors["background"])
+        text_surface = fonts["notosans"][1].render(text, True, colors["white"], colors["background"])
 
         pos[0] -= (text_surface.get_width() * alignment[0]) //2
         pos[1] -= (text_surface.get_height() * alignment[1]) //2
