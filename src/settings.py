@@ -1,5 +1,5 @@
-physics_fps = 120
-update_fps = 120
+update_fps = 60
+physics_fps = update_fps
 
 input_slow_motion = 0.2
 
