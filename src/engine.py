@@ -37,9 +37,7 @@ class Game:
 
                 if self.game_state == UIState.GAME:
                     if pygame.mouse.get_visible():
-                        pygame.mouse.set_visible(False)
-                    change_state, new_state = self.physics_module.handle_input(event)
-
+                        change_state, new_state = self.physics_module.handle_input(event)
                     if change_state: self.game_state = new_state
 
                 elif self.game_state == UIState.PAUSE:
