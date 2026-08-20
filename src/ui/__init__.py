@@ -20,6 +20,7 @@ class UIManager:
     def __init__(self):
         self.start_menu = StartMenu()
         self.level_selector = LevelSelector()
+        self.game_end_menu = GameEndMenu()
         self.level_selector.add_level_buttons((5, 9), (50, 50), (100, 100), 20)
         self.github_qr = pygame.image.load("assets/github.png")
         self.linkedin_qr = pygame.image.load("assets/linkedin.png")
@@ -30,10 +31,9 @@ class UIManager:
         if curr_state == UIState.MENU:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                mouse_pos_new = (mouse_pos[0]//settings.scaling, mouse_pos[1]//settings.scaling)
+                mouse_pos_scaled = (mouse_pos[0]//settings.scaling, mouse_pos[1]//settings.scaling)
                 mouse_state = pygame.mouse.get_pressed()
-                print(mouse_pos)
-                change_state, new_state = self.start_menu.handle_input(mouse_pos_new, mouse_state)
+                change_state, new_state = self.start_menu.handle_input(mouse_pos_scaled, mouse_state)
 
         if curr_state == UIState.LEVEL_SELECTOR:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -47,6 +47,13 @@ class UIManager:
                 change_state = True
                 new_state = UIState.MENU
 
+
+        if curr_state == UIState.GAME_END:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                mouse_pos_scaled = (mouse_pos[0]//settings.scaling, mouse_pos[1]//settings.scaling)
+                mouse_state = pygame.mouse.get_pressed()
+                change_state, new_state = self.game_end_menu.handle_input(mouse_pos_scaled, mouse_state)
         
         return (change_state, new_state)
 
@@ -64,6 +71,7 @@ class UIManager:
         if curr_state == UIState.GAME_END:
             self.draw_text(surface, "you ded", pos=list(settings.screen_mid_point), alignment=[1, 2])
             self.draw_text(surface, "press return to start again", pos=list(settings.screen_mid_point), alignment=[1, 0])
+            self.game_end_menu.draw(surface)
         
         if curr_state == UIState.CREDITS:
             github_qr_x = settings.screen_width // 4 - self.github_qr.get_width() // 2
@@ -87,6 +95,21 @@ class UIManager:
         pos[1] -= (text_surface.get_height() * alignment[1]) //2
         surface.blit(text_surface, pos)
 
+
+
+class GameEndMenu(ButtonList):
+    def __init__(self) -> None:
+        self.buttons = [
+                Button(
+                    pos = list(settings.screen_mid_point),
+                    size=2,
+                    alignment=[1,4],
+                    text = "Re: Start (re:zero reference lol)",
+                    colors = [colors["white"], colors["background"]],
+                    next_state=UIState.GAME,
+                    on_click= lambda: print("re start button clicked")
+                    )
+                ]
 
 class LevelSelector(ButtonList):
     def __init__(self) -> None:

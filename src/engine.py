@@ -36,9 +36,9 @@ class Game:
                     running = False
 
                 if self.game_state == UIState.GAME:
-                    if pygame.mouse.get_visible():
+                    if pygame.mouse.get_visible() and self.physics_module:
                         change_state, new_state = self.physics_module.handle_input(event)
-                    if change_state: self.game_state = new_state
+                        if change_state: self.game_state = new_state
 
                 elif self.game_state == UIState.PAUSE:
                     if not pygame.mouse.get_visible():
@@ -46,11 +46,15 @@ class Game:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.game_state = UIState.GAME
 
-                elif self.game_state == UIState.MENU or self.game_state == UIState.CREDITS:
+                elif self.game_state in [UIState.MENU, UIState.CREDITS, UIState.GAME_END]:
                     if not pygame.mouse.get_visible():
                         pygame.mouse.set_visible(True)
                     change_state, new_state = self.ui_manager.handle_input(event, self.game_state)
-                    if change_state: self.game_state = UIState(new_state)
+                    if change_state:
+                        if self.game_state == UIState.GAME_END and new_state == UIState.GAME:
+                            self.physics_module.reset()
+
+                        self.game_state = UIState(new_state)
 
                 elif self.game_state == UIState.LEVEL_SELECTOR:
                     if not pygame.mouse.get_visible():
@@ -65,12 +69,16 @@ class Game:
                             self.physics_module = PhysicsEntities(self.level_info)
 
 
-                elif self.game_state == UIState.GAME_END:
-                    if not pygame.mouse.get_visible():
-                        pygame.mouse.set_visible(True)
-                    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                        self.game_state = UIState.GAME
-                        self.physics_module.reset()
+                # elif self.game_state == UIState.GAME_END:
+                #     if not pygame.mouse.get_visible():
+                #         pygame.mouse.set_visible(True)
+                #
+                #     change_state, new_state = self.ui_manager.handle_input(event, self.game_state)
+                #     if change_state: self.game_state = UIState(new_state)
+
+                    # if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    #     self.game_state = UIState.GAME
+                    #     self.physics_module.reset()
 
 
             if self.game_state == UIState.GAME:
